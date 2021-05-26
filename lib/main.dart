@@ -1,65 +1,123 @@
 import 'package:flutter/material.dart';
+import 'package:localizate/search.dart';
+import 'package:localizate/views/home.dart';
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          primaryColor: Color(0xFFFF830F), accentColor: Color(0xFFD87920)),
       home: Main(),
     ));
 
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    PageController _pageController = PageController(initialPage: 0);
     return Scaffold(
-        appBar: AppBar(
-          title: Text('First page'),
-        ),
-        drawer: Drawer(
-            child: SafeArea(
+      appBar: AppBar(
+        toolbarHeight: 100,
+        title: Center(
+            child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
           child: Column(
-            children: [Text('texto del menu')],
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/img/launcher/icon-foreground.png',
+                fit: BoxFit.scaleDown,
+                height: 50,
+              ),
+              Text(
+                'Localizate',
+                style: TextStyle(fontSize: 12),
+              )
+            ],
           ),
         )),
-        body: Primerapagina());
-  }
-}
-
-class Primerapagina extends StatelessWidget {
-  const Primerapagina({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: ElevatedButton.icon(
-            onPressed: () => {Navigator.of(context).push(_createRoute())},
-            icon: Icon(Icons.arrow_right),
-            label: Text('Siguiente página')));
-  }
-}
-
-Route _createRoute() {
-  return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => Pagetwo(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, 1.0);
-        var end = Offset.zero;
-        var tween = Tween(begin: begin, end: end);
-        var offsetAnimation = animation.drive(tween);
-        return SlideTransition(
-          position: offsetAnimation,
-          child: child,
-        );
-      });
-}
-
-class Pagetwo extends StatelessWidget {
-  const Pagetwo({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Text('next page'),
-      appBar: AppBar(
-        title: Text('page two'),
       ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (int) {
+          print('cambio de página $int');
+        },
+        children: [
+          Home(),
+          Center(
+            child: Container(
+              child: Text('Cuenta'),
+            ),
+          ),
+          Center(
+            child: Container(
+              child: Text('Carrito'),
+            ),
+          ),
+          Center(
+            child: Container(
+              child: Text('Contacto'),
+            ),
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Container(
+          width: 50,
+          height: 50,
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+        mini: false,
+        clipBehavior: Clip.none,
+        onPressed: () => {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SearchView()))
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          color: Theme.of(context).primaryColor,
+          clipBehavior: Clip.none,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                    icon: Icon(
+                      Icons.home,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => {_pageController.jumpToPage(0)}),
+                IconButton(
+                    icon: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => {_pageController.jumpToPage(1)}),
+                SizedBox(
+                  width: 20,
+                ),
+                IconButton(
+                    icon: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => {_pageController.jumpToPage(2)}),
+                IconButton(
+                    icon: Icon(
+                      Icons.phone,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => {_pageController.jumpToPage(3)}),
+              ],
+            ),
+          )),
     );
   }
 }

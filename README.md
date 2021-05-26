@@ -1,4 +1,4 @@
-# localizate_app_v1
+# localizate
 
 A new Flutter project.
 

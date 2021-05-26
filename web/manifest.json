@@ -1,6 +1,6 @@
 {
-    "name": "localizate_app_v1",
-    "short_name": "localizate_app_v1",
+    "name": "localizate",
+    "short_name": "localizate",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
