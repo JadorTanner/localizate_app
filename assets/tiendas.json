@@ -1,0 +1,32 @@
+[
+    {
+        "id": "tienda-1",
+        "tienda": "tienda 1",
+        "categoria": "comida"
+    },
+    {
+        "id": "tienda-2",
+        "tienda": "tienda 2",
+        "categoria": "comida"
+    },
+    {
+        "id": "tienda-3",
+        "tienda": "tienda 3",
+        "categoria": "comida"
+    },
+    {
+        "id": "tienda-4",
+        "tienda": "tienda 4",
+        "categoria": "comida"
+    },
+    {
+        "id": "tienda-5",
+        "tienda": "tienda 5",
+        "categoria": "comida"
+    },
+    {
+        "id": "tienda-6",
+        "tienda": "tienda 6",
+        "categoria": "comida"
+    }
+]

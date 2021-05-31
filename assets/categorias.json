@@ -1,0 +1,26 @@
+[
+    {
+        "id": "cat-1",
+        "categoria": "Comida"
+    },
+    {
+        "id": "cat-2",
+        "categoria": "Zapatería"
+    },
+    {
+        "id": "cat-3",
+        "categoria": "Ropería"
+    },
+    {
+        "id": "cat-4",
+        "categoria": "Electronica"
+    },
+    {
+        "id": "cat-5",
+        "categoria": "Perfumería"
+    },
+    {
+        "id": "cat-6",
+        "categoria": "Hogar"
+    }
+]
