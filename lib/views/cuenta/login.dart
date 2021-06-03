@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:localizate/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage(this.loginFunction, {Key key}) : super(key: key);
@@ -12,9 +10,6 @@ class LoginPage extends StatefulWidget {
 //controladores de los inputs email y contraseña
 TextEditingController _emailController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
-
-//dependencia para guardar el estado del usuario
-SharedPreferences localStorage;
 
 class _LoginPageState extends State<LoginPage> {
   @override

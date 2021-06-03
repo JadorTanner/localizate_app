@@ -1,14 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:localizate/views/cuenta/account.dart';
 import 'package:localizate/views/cuenta/login.dart';
 import 'package:localizate/views/home.dart';
 import 'package:localizate/views/search.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-//localstorage de la app
-SharedPreferences localStorage;
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -19,15 +13,19 @@ void main() => runApp(MaterialApp(
 
 class Main extends StatefulWidget {
   Main({Key key}) : super(key: key);
-  static Future init() async {
-    localStorage = await SharedPreferences.getInstance();
-  }
 
   @override
   _MainState createState() => _MainState();
 }
 
 class _MainState extends State<Main> {
+  List _user = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     PageController _pageController = PageController(initialPage: 0);
@@ -36,28 +34,7 @@ class _MainState extends State<Main> {
         return Scaffold(
           //barra superior, donde se encuentra el logo
           appBar: AppBar(
-            toolbarHeight: orientation == Orientation.landscape ? 50 : 100,
-            title: Center(
-                child: Padding(
-              padding: orientation == Orientation.landscape
-                  ? EdgeInsets.symmetric(vertical: 20)
-                  : EdgeInsets.symmetric(vertical: 5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/img/launcher/icon-foreground.png',
-                    fit: BoxFit.scaleDown,
-                    height: 50,
-                  ),
-                  Text(
-                    'Localizate',
-                    style: TextStyle(fontSize: 12),
-                  )
-                ],
-              ),
-            )),
+            toolbarHeight: orientation == Orientation.landscape ? 50 : 70,
           ),
 
           //vistas (home, cuenta, tienda, carrito)
@@ -68,12 +45,11 @@ class _MainState extends State<Main> {
             },
             children: [
               Home(),
-              (localStorage != null)
-                  ? AccountPage()
-                  : LoginPage(() => {login()}),
+              _user.isNotEmpty ? AccountPage() : LoginPage(() => {login()}),
+              SearchView(),
               Center(
                 child: Container(
-                  child: Text('Carrito'),
+                  child: Text('Aun no has agregado algo a tu carrito'),
                 ),
               ),
               Center(
@@ -98,10 +74,7 @@ class _MainState extends State<Main> {
             backgroundColor: Theme.of(context).primaryColor,
             mini: false,
             clipBehavior: Clip.none,
-            onPressed: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SearchView()))
-            },
+            onPressed: () => {_pageController.jumpToPage(2)},
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
@@ -110,6 +83,7 @@ class _MainState extends State<Main> {
           bottomNavigationBar: BottomAppBar(
               shape: CircularNotchedRectangle(),
               color: Theme.of(context).primaryColor,
+              notchMargin: 10,
               clipBehavior: Clip.none,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
@@ -122,8 +96,8 @@ class _MainState extends State<Main> {
                         width: 10,
                       ),
                       bottomAppbarButton(
-                          _pageController, Icons.shopping_cart, 2),
-                      bottomAppbarButton(_pageController, Icons.phone, 3)
+                          _pageController, Icons.shopping_cart, 3),
+                      bottomAppbarButton(_pageController, Icons.phone, 4)
                     ]),
               )),
         );

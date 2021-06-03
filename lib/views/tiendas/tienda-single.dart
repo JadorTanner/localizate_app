@@ -4,49 +4,43 @@ import 'package:localizate/views/tiendas/producto.dart';
 class Tienda extends StatefulWidget {
   Tienda(this.tienda, {Key key}) : super(key: key);
 
-  final int tienda;
+  final Map tienda;
   @override
   _TiendaState createState() => _TiendaState();
 }
 
 class _TiendaState extends State<Tienda> {
-  List<Map> _productos = [
-    {
-      'id': 'BX456',
-      'nombre': 'Producto 1',
-      'precio': 5000,
-      'descripcion': 'Producto numero 1'
-    },
-    {
-      'id': 'BX457',
-      'nombre': 'Producto 2',
-      'precio': 50000,
-      'descripcion': 'Producto numero 2'
-    },
-    {
-      'id': 'BX458',
-      'nombre': 'Producto 3',
-      'precio': 48500,
-      'descripcion': 'Producto numero 3'
-    },
-  ];
   @override
   Widget build(BuildContext context) {
+    List<Map> _productos = widget.tienda['productos'];
     return Scaffold(
         appBar: AppBar(
-          toolbarHeight: 100,
+          toolbarHeight: 70,
           title: Center(
               child: Text(
-            'Tienda ${widget.tienda}',
+            widget.tienda['name'],
             style: TextStyle(fontSize: 12),
           )),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: List.generate(_productos.length,
-                (index) => ProductoTienda(_productos[index])),
+        body: Column(children: [
+          Container(
+            height: 200,
+            padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+            child: Image.asset("assets/img/${widget.tienda['logo']}"),
           ),
-        ));
+          //contenedor de los productos de la tienda
+          Expanded(
+              child: Container(
+                  padding: EdgeInsets.only(top: 10),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20))),
+                  child: ListView(
+                    children: List.generate(_productos.length,
+                        (index) => ProductoTienda(_productos[index])),
+                  )))
+        ]));
   }
 }
 
@@ -56,33 +50,51 @@ class ProductoTienda extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(10),
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10),
-          child: GestureDetector(
-              onTap: () => {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Producto()))
-                  },
-              child: Card(
-                child: Row(
+      padding: EdgeInsets.all(10),
+      child: GestureDetector(
+          onTap: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Producto()))
+              },
+          child: Container(
+              margin: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Column(children: [
+                Row(
                   children: [
-                    Image.network('https://via.placeholder.com/100x100'),
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(50)),
+                        clipBehavior: Clip.hardEdge,
+                        height: 90,
+                        width: 90,
+                        padding: EdgeInsets.all(10),
+                        child: Image.asset(
+                          "assets/img/${_producto['img']}",
+                          fit: BoxFit.cover,
+                        )),
+                    SizedBox(width: 20),
                     Expanded(
-                        child: Padding(
-                      padding: EdgeInsets.all(20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(_producto['nombre']),
                           Text(_producto['precio'].toString())
                         ],
                       ),
-                    ))
+                    ),
                   ],
                 ),
-              )),
-        ));
+                SizedBox(
+                  height: 20,
+                ),
+                Divider(
+                  color: Color(0x5D000000),
+                  height: 2,
+                )
+              ]))),
+    );
   }
 }

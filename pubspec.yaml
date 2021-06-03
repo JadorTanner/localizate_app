@@ -23,7 +23,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.6
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -37,10 +36,10 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path_ios: "assets/img/launcher/icon-complete.png"
-  image_path_android: "assets/img/launcher/icon-complete.png"
-  adaptive_icon_background: "assets/img/launcher/icon-background.png"
-  adaptive_icon_foreground: "assets/img/launcher/icon-foreground.png"
+  image_path_ios: "assets/img/launcher/icon.png"
+  image_path_android: "assets/img/launcher/icon.png"
+  adaptive_icon_background: "assets/img/launcher/background.png"
+  adaptive_icon_foreground: "assets/img/launcher/foreground.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -53,6 +52,7 @@ flutter:
 
   assets:
     - assets/img/launcher/
+    - assets/img/banners/
     - assets/img/
     - assets/
 
@@ -72,6 +72,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Comfortaa
+      fonts:
+        - asset: fonts/Comfortaa-Bold.ttf
+          weight: 700
   # fonts:
   #   - family: Schyler
   #     fonts:
