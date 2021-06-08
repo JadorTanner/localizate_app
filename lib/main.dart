@@ -12,7 +12,7 @@ void main() => runApp(MaterialApp(
     ));
 
 class Main extends StatefulWidget {
-  Main({Key key}) : super(key: key);
+  Main({Key? key}) : super(key: key);
 
   @override
   _MainState createState() => _MainState();
@@ -35,6 +35,11 @@ class _MainState extends State<Main> {
           //barra superior, donde se encuentra el logo
           appBar: AppBar(
             toolbarHeight: orientation == Orientation.landscape ? 50 : 70,
+            title: Center(
+                child: Image.asset(
+              'assets/img/logo-localizate-header_white.png',
+              width: 150,
+            )),
           ),
 
           //vistas (home, cuenta, tienda, carrito)
@@ -73,7 +78,7 @@ class _MainState extends State<Main> {
             ),
             backgroundColor: Theme.of(context).primaryColor,
             mini: false,
-            clipBehavior: Clip.none,
+            clipBehavior: Clip.hardEdge,
             onPressed: () => {_pageController.jumpToPage(2)},
           ),
           floatingActionButtonLocation:
@@ -84,7 +89,7 @@ class _MainState extends State<Main> {
               shape: CircularNotchedRectangle(),
               color: Theme.of(context).primaryColor,
               notchMargin: 10,
-              clipBehavior: Clip.none,
+              clipBehavior: Clip.hardEdge,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Row(

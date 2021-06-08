@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:localizate/views/tiendas/producto.dart';
 
 class Tienda extends StatefulWidget {
-  Tienda(this.tienda, {Key key}) : super(key: key);
+  Tienda(this.tienda, this.img, {Key? key}) : super(key: key);
 
   final Map tienda;
+  final String img;
   @override
   _TiendaState createState() => _TiendaState();
 }
@@ -12,22 +13,49 @@ class Tienda extends StatefulWidget {
 class _TiendaState extends State<Tienda> {
   @override
   Widget build(BuildContext context) {
-    List<Map> _productos = widget.tienda['productos'];
+    List<Map> _productos = widget.tienda['products'];
+    print(_productos);
     return Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 70,
-          title: Center(
-              child: Text(
-            widget.tienda['name'],
-            style: TextStyle(fontSize: 12),
-          )),
-        ),
+        floatingActionButton: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
         body: Column(children: [
-          Container(
-            height: 200,
-            padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-            child: Image.asset("assets/img/${widget.tienda['logo']}"),
-          ),
+          Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                    height: 250,
+                    padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(widget.img), fit: BoxFit.cover))),
+                Positioned(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    bottom: -80,
+                    child: Card(
+                        child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child:
+                                Stack(alignment: Alignment.center, children: [
+                              Column(children: [
+                                Image.asset(
+                                  widget.tienda['img'],
+                                  fit: BoxFit.scaleDown,
+                                  height: 100,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(widget.tienda['name']),
+                              ])
+                            ]))))
+              ]),
+          SizedBox(height: 100),
           //contenedor de los productos de la tienda
           Expanded(
               child: Container(
@@ -45,7 +73,7 @@ class _TiendaState extends State<Tienda> {
 }
 
 class ProductoTienda extends StatelessWidget {
-  const ProductoTienda(this._producto, {Key key}) : super(key: key);
+  const ProductoTienda(this._producto, {Key? key}) : super(key: key);
   final Map _producto;
   @override
   Widget build(BuildContext context) {
@@ -71,7 +99,7 @@ class ProductoTienda extends StatelessWidget {
                         width: 90,
                         padding: EdgeInsets.all(10),
                         child: Image.asset(
-                          "assets/img/${_producto['img']}",
+                          _producto['img'],
                           fit: BoxFit.cover,
                         )),
                     SizedBox(width: 20),
@@ -80,8 +108,8 @@ class ProductoTienda extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(_producto['nombre']),
-                          Text(_producto['precio'].toString())
+                          Text(_producto['name']),
+                          Text(_producto['price'].toString())
                         ],
                       ),
                     ),

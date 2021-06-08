@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/views/tiendas/tienda-single.dart';
+import 'package:localizate/globals.dart' as globals;
 
 class SearchView extends StatefulWidget {
-  SearchView({Key key}) : super(key: key);
+  SearchView({Key? key}) : super(key: key);
 
   @override
   _SearchViewState createState() => _SearchViewState();
@@ -12,19 +13,15 @@ class _SearchViewState extends State<SearchView> {
   TextEditingController editingController = TextEditingController();
 
 //lista estatica de tiendas
-  final List tiendas = [
-    {'name': 'McDonalds', 'logo': 'mcdonalds.png'},
-    {'name': 'BurgerKing', 'logo': 'burger-king.png'},
-    {'name': "Domino's pizza", 'logo': 'dominos-pizza.png'},
-    {'name': "Ñamopu'a", 'logo': 'mcdonalds.png'},
-    {'name': 'Nike', 'logo': 'burger-king.png'},
-    {'name': "Ropa", 'logo': 'dominos-pizza.png'},
-  ];
+  late final List tiendas;
   //lista dinamica que cambiara de acuerdo a la busqueda
   List listaTiendasDinamica = [];
 
   @override
   void initState() {
+    for (var item in globals.categorias) {
+      tiendas.add(item['shops']);
+    }
     listaTiendasDinamica.addAll(tiendas);
     super.initState();
   }
@@ -55,6 +52,7 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
+    print(listaTiendasDinamica);
     return Container(
         child: Column(
       children: <Widget>[
@@ -79,10 +77,11 @@ class _SearchViewState extends State<SearchView> {
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            Tienda(listaTiendasDinamica[index]))),
+                        builder: (BuildContext context) => Tienda(
+                            listaTiendasDinamica[index],
+                            listaTiendasDinamica[index]['img']))),
                 child: ListTile(
-                  title: Text('${listaTiendasDinamica[index]}'),
+                  title: Text('tienda'),
                 ),
               );
             },

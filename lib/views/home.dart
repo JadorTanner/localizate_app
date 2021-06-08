@@ -1,236 +1,163 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:localizate/views/tiendas/tiendas.dart';
+import 'package:localizate/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  List<Map> categorias = [
-    {'name': 'Comida', 'img': 'pizza-home.png', 'categoria': 'comida'},
-    {'name': 'Ropa', 'img': 'clothes.png', 'categoria': 'ropa'},
-    {'name': 'Farmacia', 'img': 'botiquin.png', 'categoria': 'farmacia'},
-  ];
+  List categorias = globals.categorias;
   List<Widget> categoriasWidgets = [];
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   categoriasWidgets = List.generate(
-  //       categorias.length,
-  //       (index) => GestureDetector(
-  //           onTap: () => {
-  //                 Navigator.push(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                         builder: (context) => Tiendas('Comida')))
-  //               },
-  //           child: Card(
-  //               semanticContainer: true,
-  //               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-  //               child: Row(children: [
-  //                 Image.asset('assets/img/${categorias[index]['img']}'),
-  //                 Expanded(
-  //                     child: Container(
-  //                         padding: EdgeInsets.symmetric(
-  //                             vertical: 50, horizontal: 20),
-  //                         child: Text(categorias[index]['name']))),
-  //               ]))));
-  // }
-  TextStyle estilos_texto_categorias = TextStyle(
-      fontFamily: 'Comfortaa', fontSize: 24, fontWeight: FontWeight.bold);
   ScrollController _scrollController = ScrollController();
+
+  Future getData() async {
+    var response = await http.post(
+        Uri.parse('http://jadortanner.cu.ma/localizate/localizate.php'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'request': 'tiendas'}));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      print(data);
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    getData();
     return ListView(controller: _scrollController, children: [
       Image.asset(
         'assets/img/banners/bg-principal.png',
       ),
       SizedBox(height: 10),
-      Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          margin: EdgeInsets.symmetric(vertical: 10),
-          height: 150,
-          child: GestureDetector(
-              onTap: () => {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Tiendas(categorias[0]['categoria'])))
-                  },
-              child: Card(
-                  color: Theme.of(context).primaryColor,
-                  semanticContainer: true,
-                  child: Row(children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 25),
-                      child: Image.asset('assets/img/${categorias[0]['img']}'),
-                    ),
-                    Expanded(
-                        child: Center(
-                            child: Text(
-                      categorias[0]['name'],
-                      style: estilos_texto_categorias,
-                    ))),
-                  ])))),
-      Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          margin: EdgeInsets.symmetric(vertical: 10),
-          height: 150,
-          child: GestureDetector(
-              onTap: () => {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Tiendas(categorias[1]['categoria'])))
-                  },
-              child: Card(
-                  color: Color(0xFFB5FFF3),
-                  semanticContainer: true,
-                  child: Row(children: [
-                    Expanded(
-                        child: Center(
-                            child: Text(categorias[1]['name'],
-                                style: estilos_texto_categorias))),
-                    Padding(
-                      padding: EdgeInsets.only(right: 25),
-                      child: Image.asset('assets/img/${categorias[1]['img']}'),
-                    ),
-                  ])))),
-      Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          margin: EdgeInsets.symmetric(vertical: 10),
-          height: 150,
-          child: GestureDetector(
-              onTap: () => {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Tiendas(categorias[2]['categoria'])))
-                  },
-              child: Card(
-                  color: Color(0xFFCF4B4B),
-                  semanticContainer: true,
-                  child: Row(children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 50),
-                      child: Image.asset(
-                        'assets/img/${categorias[2]['img']}',
-                        width: 80,
-                      ),
-                    ),
-                    Expanded(
-                        child: Center(
-                            child: Text(categorias[2]['name'],
-                                style: estilos_texto_categorias))),
-                  ]))))
+      ...List.generate(
+          categorias.length, (index) => CategoryCard(categorias[index], index))
     ]);
   }
 }
 
-// class HomeBK extends StatefulWidget {
-//   HomeBK({Key key}) : super(key: key);
+// tarjeta de categoria
+class CategoryCard extends StatelessWidget {
+  const CategoryCard(this.categoria, this.index, {Key? key}) : super(key: key);
+  final Map categoria;
+  final int index;
+  @override
+  Widget build(BuildContext context) {
+    final double indexPar = index % 2;
+    TextStyle estilosTextoCategorias = TextStyle(
+        fontFamily: 'Comfortaa',
+        fontSize: 24,
+        fontWeight: FontWeight.w900,
+        color: Colors.white);
+    return Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+        clipBehavior: Clip.hardEdge,
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        height: 200,
+        child: GestureDetector(
+            onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Tiendas(categoria)))
+                },
+            child: Card(
+                clipBehavior: Clip.hardEdge,
+                semanticContainer: true,
+                child: Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(categoria['img']))),
+                    ),
+                    CustomPaint(
+                      child: Container(
+                          padding: EdgeInsets.all(20),
+                          alignment: indexPar == 0
+                              ? Alignment.bottomLeft
+                              : Alignment.bottomRight,
+                          child: Text(categoria['name'],
+                              style: estilosTextoCategorias)),
+                      size: Size(
+                          100,
+                          (200 * 0.625)
+                              .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                      painter: RPSCustomPainter(indexPar),
+                    ),
+                  ],
+                )
+                // child: Row(
+                //     textDirection: (index % 2) == 0
+                //         ? TextDirection.ltr
+                //         : TextDirection.rtl,
+                //     children: [
+                //       Expanded(
+                //           flex: 1,
+                //           child: Container(
+                //             alignment: Alignment.center,
+                //             transformAlignment: Alignment.center,
+                //             transform: Matrix4.rotationZ(
+                //                 (index % 2) == 0 ? -0.3 : 0.3),
+                //             child: FaIcon(
+                //               categoria['icon'],
+                //               color: Colors.white,
+                //               size: 60,
+                //             ),
+                //           )),
+                //       Expanded(
+                //           flex: 2,
+                //           child: Center(
+                //               child: Text(categoria['name'],
+                //                   style: estilosTextoCategorias))),
+                //     ])
+                )));
+  }
+}
 
-//   @override
-//   _HomeBKState createState() => _HomeBKState();
-// }
+class RPSCustomPainter extends CustomPainter {
+  RPSCustomPainter(this.indexPar);
+  final double indexPar;
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint_0 = new Paint()
+      // ..color = Color.fromARGB(255, 33, 150, 243)
+      ..color = Color(0xFFFF830F)
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 1.0;
 
-// Future getCategorias() async {
-//   var response = await http.post(
-//       Uri.parse('http://jadortanner.cu.ma/localizate/localizate.php'),
-//       body: {'request': 'tiendas'});
-//   print(response.statusCode);
-// }
+    Path path_0 = Path();
+    path_0.moveTo(indexPar == 0 ? 0 : size.width, size.height);
+    path_0.lineTo(
+        indexPar == 0 ? size.width * 0.5 : size.width * 0.5, size.height);
+    path_0.lineTo(indexPar == 0 ? size.width * 0.25 : size.width * 0.75, 0);
+    path_0.lineTo(indexPar == 0 ? 0 : size.width, 0);
+    path_0.lineTo(indexPar == 0 ? 0 : size.width, size.height);
+    path_0.close();
 
-// class _HomeBKState extends State<HomeBK> {
-//   List categorias;
-//   ScrollController _scrollController = ScrollController();
-//   int currentMax = 10;
-//   // List categorias = [
-//   //   'Comida',
-//   //   'Ropa',
-//   //   'Bebidas',
-//   //   'Perfumes',
-//   //   'Jugueteria',
-//   //   'Panaderia'
-//   // ];
+    canvas.drawPath(path_0, paint_0);
+  }
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     categorias = List.generate(currentMax, (index) => 'Categoría ${index + 1}');
-//     _scrollController.addListener(() {
-//       if (_scrollController.position.pixels ==
-//           _scrollController.position.maxScrollExtent) {
-//         _masCategorias();
-//       }
-//     });
-//   }
-
-//   _masCategorias() {
-//     print('mas categorias');
-//     for (var i = currentMax; i < currentMax + 10; i++) {
-//       categorias.add('Categoria ${i + 1}');
-//     }
-//     currentMax += 10;
-//     setState(() {});
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListView.builder(
-//         controller: _scrollController,
-//         itemExtent: 150,
-//         itemCount: categorias.length,
-//         itemBuilder: (context, index) {
-//           if (index == categorias.length + 1) {
-//             return CupertinoActivityIndicator();
-//           }
-//           return Seccion(categorias[index]);
-//         });
-//     // return ListView(
-//     //   itemExtent: 100,
-//     //   controller: _scrollController,
-//     //   children: [
-//     //   Image.asset('assets/img/banners/bg-principal.png'),
-//     //   SizedBox(
-//     //     height: 50,
-//     //   ),
-//     //   ...List.from(secciones)
-//     // ]);
-//   }
-// }
-
-// class Seccion extends StatelessWidget {
-//   const Seccion(this._title, {Key key}) : super(key: key);
-//   final String _title;
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//         onTap: () => {
-//               Navigator.push(context,
-//                   MaterialPageRoute(builder: (context) => Tiendas(_title)))
-//             },
-//         child: Card(
-//             semanticContainer: true,
-//             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-//             child: Container(
-//                 decoration: BoxDecoration(
-//                     image: DecorationImage(
-//                         image: AssetImage('assets/img/pub50-1.jpg'),
-//                         fit: BoxFit.cover)),
-//                 child: Container(
-//                     alignment: Alignment(-1, 0),
-//                     color: Color(0xaaffffff),
-//                     padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-//                     child: Text(_title)))));
-//   }
-// }
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
