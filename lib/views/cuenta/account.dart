@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localizate/globals.dart' as globals;
 
 class AccountPage extends StatefulWidget {
   AccountPage({Key? key}) : super(key: key);
@@ -13,8 +14,11 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.all(20),
-        child: Center(
-          child: Text(_userName),
-        ));
+        child: Column(children: [
+          Center(
+            child: Text(_userName),
+          ),
+          Text(globals.isLogged ? 'Logueado' : 'no logueado')
+        ]));
   }
 }

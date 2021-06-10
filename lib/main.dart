@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:localizate/utils/api.dart';
 import 'package:localizate/views/cuenta/account.dart';
 import 'package:localizate/views/cuenta/login.dart';
 import 'package:localizate/views/home.dart';
 import 'package:localizate/views/search.dart';
+import 'package:localizate/globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -50,7 +55,7 @@ class _MainState extends State<Main> {
             },
             children: [
               Home(),
-              _user.isNotEmpty ? AccountPage() : LoginPage(() => {login()}),
+              globals.isLogged ? AccountPage() : LoginPage(() => {}),
               SearchView(),
               Center(
                 child: Container(
@@ -83,7 +88,6 @@ class _MainState extends State<Main> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-
           //barra de menú inferior
           bottomNavigationBar: BottomAppBar(
               shape: CircularNotchedRectangle(),

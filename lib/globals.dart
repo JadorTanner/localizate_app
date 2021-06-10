@@ -2,6 +2,7 @@ library localizate_app_v1.globals;
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+bool isLogged = false;
 List<Map> categorias = [
   {
     'name': 'Comida',
@@ -17,17 +18,20 @@ List<Map> categorias = [
           {
             'name': 'Papas Fritas',
             'price': 5000,
-            'img': 'assets/img/shops/comida/mcdonalds/papas_fritas.png'
+            'img': 'assets/img/shops/comida/mcdonalds/papas_fritas.png',
+            'description': 'Papas fritas'
           },
           {
             'name': 'Doble Cheddar',
             'price': 15000,
-            'img': 'assets/img/shops/comida/mcdonalds/doble_cheddar.jpg'
+            'img': 'assets/img/shops/comida/mcdonalds/doble_cheddar.jpg',
+            'description': 'Hamburguesa Doble Cheddar'
           },
           {
             'name': 'Big Mac',
             'price': 20000,
-            'img': 'assets/img/shops/comida/mcdonalds/big_mac.jpg'
+            'img': 'assets/img/shops/comida/mcdonalds/big_mac.jpg',
+            'description': 'Hamburguesa Big Mac'
           },
         ]
       },
@@ -39,18 +43,21 @@ List<Map> categorias = [
           {
             'name': 'Whopper',
             'price': 7500,
-            'img': 'assets/img/shops/comida/burgerking/whopper.jpg'
+            'img': 'assets/img/shops/comida/burgerking/whopper.jpg',
+            'description': 'Hamburguesa Whopper'
           },
           {
             'name': 'Whopper Doble',
             'price': 15500,
-            'img': 'assets/img/shops/comida/burgerking/whopper_doble.jpg'
+            'img': 'assets/img/shops/comida/burgerking/whopper_doble.jpg',
+            'description': 'Hamburguesa Whopper doble'
           },
           {
             'name': 'Hamburguesa con queso',
             'price': 17000,
             'img':
-                'assets/img/shops/comida/burgerking/hamburguesa_con_queso.jpg'
+                'assets/img/shops/comida/burgerking/hamburguesa_con_queso.jpg',
+            'description': 'Hamburguesa con queso'
           },
         ]
       },
@@ -62,22 +69,26 @@ List<Map> categorias = [
           {
             'name': 'Parmesana',
             'price': 25000,
-            'img': 'assets/img/shops/comida/dominos/parmesana.png'
+            'img': 'assets/img/shops/comida/dominos/parmesana.png',
+            'description': 'Pizza parmesana'
           },
           {
             'name': 'Pecado Carnal',
             'price': 30000,
-            'img': 'assets/img/shops/comida/dominos/pecado_carnal.png'
+            'img': 'assets/img/shops/comida/dominos/pecado_carnal.png',
+            'description': 'Pizza pecado carnal'
           },
           {
             'name': 'Cremozza',
             'price': 20000,
-            'img': 'assets/img/shops/comida/dominos/cremozza.png'
+            'img': 'assets/img/shops/comida/dominos/cremozza.png',
+            'description': 'Pizza cremozza'
           },
           {
             'name': 'Barbacoa',
             'price': 20000,
-            'img': 'assets/img/shops/comida/dominos/barbacoa.png'
+            'img': 'assets/img/shops/comida/dominos/barbacoa.png',
+            'description': 'Pizza barbacoa'
           },
         ]
       },
@@ -97,17 +108,20 @@ List<Map> categorias = [
           {
             'name': 'Skinny azul',
             'price': 40000,
-            'img': 'assets/img/shops/ropa/namopua/jeans_skinny_azul.png'
+            'img': 'assets/img/shops/ropa/namopua/jeans_skinny_azul.png',
+            'description': 'Pantalon skinny azul'
           },
           {
             'name': 'Skinny negro',
             'price': 35000,
-            'img': 'assets/img/shops/ropa/namopua/jeans_skinny_negro.png'
+            'img': 'assets/img/shops/ropa/namopua/jeans_skinny_negro.png',
+            'description': 'Pantalon skinny negro'
           },
           {
-            'name': 'Big Mac',
+            'name': 'Jogger',
             'price': 37000,
-            'img': 'assets/img/shops/ropa/namopua/jogger.png'
+            'img': 'assets/img/shops/ropa/namopua/jogger.png',
+            'description': 'Pantalon Jogger'
           },
         ]
       },

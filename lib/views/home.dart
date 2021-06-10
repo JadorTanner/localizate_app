@@ -40,7 +40,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    getData();
     return ListView(controller: _scrollController, children: [
       Image.asset(
         'assets/img/banners/bg-principal.png',

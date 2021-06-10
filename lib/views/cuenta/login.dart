@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:localizate/globals.dart' as globals;
+import 'package:localizate/views/cuenta/account.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage(this.loginFunction, {Key? key}) : super(key: key);
@@ -35,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                   onPressed: () => {}, child: Text('Olvidé mi contraseña')),
               TextButton(
-                onPressed: () => {login()},
+                onPressed: () => {globals.isLogged = true, setState(() {})},
                 child: Text(
                   'Iniciar sesión',
                   style: TextStyle(color: Colors.white),
@@ -48,8 +50,4 @@ class _LoginPageState extends State<LoginPage> {
           )
         ]));
   }
-}
-
-login() {
-  print('login');
 }
