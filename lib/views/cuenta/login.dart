@@ -3,8 +3,7 @@ import 'package:localizate/globals.dart' as globals;
 import 'package:localizate/views/cuenta/account.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage(this.loginFunction, {Key? key}) : super(key: key);
-  final void loginFunction;
+  LoginPage({Key? key}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }

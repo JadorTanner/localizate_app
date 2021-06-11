@@ -8,6 +8,7 @@ import 'package:localizate/views/home.dart';
 import 'package:localizate/views/search.dart';
 import 'package:localizate/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -25,10 +26,20 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   List _user = [];
-
   @override
   void initState() {
     super.initState();
+  }
+
+  login() async {
+    var data = {"email": "tannerjador@gmail.com", "password": "123456789"};
+    Network().login(data, 'login');
+
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    if (localStorage.getString('token') != "") {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
   }
 
   @override
@@ -55,7 +66,7 @@ class _MainState extends State<Main> {
             },
             children: [
               Home(),
-              globals.isLogged ? AccountPage() : LoginPage(() => {}),
+              globals.isLogged ? AccountPage() : LoginPage(),
               SearchView(),
               Center(
                 child: Container(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:localizate/views/tiendas/producto1.dart';
-import 'package:localizate/views/tiendas/producto2.dart';
+import 'package:localizate/utils/api.dart';
+import 'package:localizate/views/tiendas/producto.dart';
 
 class Tienda extends StatefulWidget {
   Tienda(this.tienda, this.img, {Key? key}) : super(key: key);
@@ -12,10 +12,14 @@ class Tienda extends StatefulWidget {
 }
 
 class _TiendaState extends State<Tienda> {
+  getProducts() async {
+    var data = {};
+    Network().authData(data, 'products');
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Map> _productos = widget.tienda['products'];
-    print(_productos);
     return Scaffold(
         floatingActionButton: IconButton(
             onPressed: () => Navigator.pop(context),
@@ -87,9 +91,7 @@ class ProductoTienda extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => index % 2 == 0
-                            ? Producto1(_producto)
-                            : Producto2(_producto)))
+                        builder: (context) => Producto(_producto)))
               },
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 30),

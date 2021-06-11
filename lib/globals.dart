@@ -19,19 +19,24 @@ List<Map> categorias = [
             'name': 'Papas Fritas',
             'price': 5000,
             'img': 'assets/img/shops/comida/mcdonalds/papas_fritas.png',
-            'description': 'Papas fritas'
+            'description':
+                'Papas fritas, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.',
+            'color': 'ffc920'
           },
           {
             'name': 'Doble Cheddar',
             'price': 15000,
             'img': 'assets/img/shops/comida/mcdonalds/doble_cheddar.jpg',
-            'description': 'Hamburguesa Doble Cheddar'
+            'description':
+                'Hamburguesa Doble Cheddar, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.',
+            'color': 'a98000'
           },
           {
             'name': 'Big Mac',
             'price': 20000,
             'img': 'assets/img/shops/comida/mcdonalds/big_mac.jpg',
-            'description': 'Hamburguesa Big Mac'
+            'description':
+                'Hamburguesa Big Mac, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
         ]
       },
@@ -44,20 +49,23 @@ List<Map> categorias = [
             'name': 'Whopper',
             'price': 7500,
             'img': 'assets/img/shops/comida/burgerking/whopper.jpg',
-            'description': 'Hamburguesa Whopper'
+            'description':
+                'Hamburguesa Whopper, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
           {
             'name': 'Whopper Doble',
             'price': 15500,
             'img': 'assets/img/shops/comida/burgerking/whopper_doble.jpg',
-            'description': 'Hamburguesa Whopper doble'
+            'description':
+                'Hamburguesa Whopper doble, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
           {
             'name': 'Hamburguesa con queso',
             'price': 17000,
             'img':
                 'assets/img/shops/comida/burgerking/hamburguesa_con_queso.jpg',
-            'description': 'Hamburguesa con queso'
+            'description':
+                'Hamburguesa con queso, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
         ]
       },
@@ -70,25 +78,29 @@ List<Map> categorias = [
             'name': 'Parmesana',
             'price': 25000,
             'img': 'assets/img/shops/comida/dominos/parmesana.png',
-            'description': 'Pizza parmesana'
+            'description':
+                'Pizza parmesana, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
           {
             'name': 'Pecado Carnal',
             'price': 30000,
             'img': 'assets/img/shops/comida/dominos/pecado_carnal.png',
-            'description': 'Pizza pecado carnal'
+            'description':
+                'Pizza pecado carnal, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
           {
             'name': 'Cremozza',
             'price': 20000,
             'img': 'assets/img/shops/comida/dominos/cremozza.png',
-            'description': 'Pizza cremozza'
+            'description':
+                'Pizza cremozza, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
           {
             'name': 'Barbacoa',
             'price': 20000,
             'img': 'assets/img/shops/comida/dominos/barbacoa.png',
-            'description': 'Pizza barbacoa'
+            'description':
+                'Pizza barbacoa, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
         ]
       },
@@ -109,19 +121,22 @@ List<Map> categorias = [
             'name': 'Skinny azul',
             'price': 40000,
             'img': 'assets/img/shops/ropa/namopua/jeans_skinny_azul.png',
-            'description': 'Pantalon skinny azul'
+            'description':
+                'Pantalon skinny azul, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
           {
             'name': 'Skinny negro',
             'price': 35000,
             'img': 'assets/img/shops/ropa/namopua/jeans_skinny_negro.png',
-            'description': 'Pantalon skinny negro'
+            'description':
+                'Pantalon skinny negro, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
           {
             'name': 'Jogger',
             'price': 37000,
             'img': 'assets/img/shops/ropa/namopua/jogger.png',
-            'description': 'Pantalon Jogger'
+            'description':
+                'Pantalon Jogger, Lorem ipsum dolor sit amet, consectetur adipiscing elit. etiam nec suscipit arcu, feugiat fermentum ex cras nec scelerisque magna, eu dignissim ante.'
           },
         ]
       },

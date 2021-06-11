@@ -21,7 +21,6 @@ class _TiendasState extends State<Tiendas> {
     tiendas = widget._categoria['shops'];
     listaTiendasDinamica.addAll(tiendas);
     super.initState();
-    print(tiendas);
   }
 //filtrar por busqueda
 
