@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:localizate/models/products.dart';
 import 'package:localizate/views/tiendas/tiendas.dart';
 import 'package:localizate/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
+  Home(this.products, {Key? key}) : super(key: key);
+  List<Product> products;
 
   @override
   _HomeState createState() => _HomeState();
@@ -17,21 +19,6 @@ class _HomeState extends State<Home> {
   List categorias = globals.categorias;
   List<Widget> categoriasWidgets = [];
   ScrollController _scrollController = ScrollController();
-
-  Future getData() async {
-    var response = await http.post(
-        Uri.parse('http://jadortanner.cu.ma/localizate/localizate.php'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode({'request': 'tiendas'}));
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      print(data);
-    } else {
-      print(response.statusCode);
-    }
-  }
 
   @override
   void initState() {
@@ -45,17 +32,19 @@ class _HomeState extends State<Home> {
         'assets/img/banners/bg-principal.png',
       ),
       SizedBox(height: 10),
-      ...List.generate(
-          categorias.length, (index) => CategoryCard(categorias[index], index))
+      ...List.generate(categorias.length,
+          (index) => CategoryCard(categorias[index], index, widget.products[0]))
     ]);
   }
 }
 
 // tarjeta de categoria
 class CategoryCard extends StatelessWidget {
-  const CategoryCard(this.categoria, this.index, {Key? key}) : super(key: key);
+  const CategoryCard(this.categoria, this.index, this.product, {Key? key})
+      : super(key: key);
   final Map categoria;
   final int index;
+  final Product product;
   @override
   Widget build(BuildContext context) {
     final double indexPar = index % 2;
@@ -83,11 +72,11 @@ class CategoryCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(categoria['img']))),
-                    ),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(product.image)))),
+                    // image: AssetImage(categoria['img']))),
                     CustomPaint(
                       child: Container(
                           padding: EdgeInsets.all(20),

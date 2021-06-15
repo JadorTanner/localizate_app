@@ -1,0 +1,61 @@
+{
+  "id": 2,
+  "name": "hamburger",
+  "barcode": 123456,
+  "description": "descripción de hamburguesa",
+  "company_id": 2,
+  "subcategory_id": 3,
+  "image": "placeholder-imagen-error-800x800.png",
+  "image_2": null,
+  "image_3": null,
+  "enabled": true,
+  "deleted_at": null,
+  "created_at": "2021-06-10 20:37:51",
+  "updated_at": "2021-06-14 01:41:13",
+  "created_by": 1,
+  "updated_by": 3,
+  "deleted_by": null,
+  "brand_id": 5,
+  "price": 10000,
+  "views": 0,
+  "offer_price": 5000,
+  "wholesalers_price": 0.0,
+  "subcategory": {
+    "id": 3,
+    "name": "hamburguesas",
+    "enabled": true,
+    "category_id": 1,
+    "deleted_at": null,
+    "created_at": "2021-06-08 22:43:03",
+    "updated_at": "2021-06-08 22:43:03",
+    "created_by": 1,
+    "updated_by": null,
+    "deleted_by": null,
+    "category": {
+      "id": 1,
+      "name": "Comida",
+      "enabled": true,
+      "deleted_at": null,
+      "created_at": "2021-06-08 22:41:32",
+      "updated_at": "2021-06-08 22:41:32",
+      "created_by": 1,
+      "updated_by": null,
+      "deleted_by": null,
+      "commission_percentage": 10.0,
+      "stockable": true,
+      "fields": [
+        {
+          "id": 1,
+          "name": "cantidad",
+          "type": "numeric",
+          "multiple": false,
+          "options": [],
+          "nullable": true,
+          "category_id": 1,
+          "deleted_at": null,
+          "created_at": "2021-06-10 20:36:36"
+        }
+      ]
+    }
+  }
+}

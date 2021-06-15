@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:localizate/utils/api.dart';
+import 'package:localizate/models/products.dart';
 import 'package:localizate/views/cuenta/account.dart';
 import 'package:localizate/views/cuenta/login.dart';
 import 'package:localizate/views/home.dart';
@@ -26,19 +26,46 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   List _user = [];
+  List<Category> categorias = [];
+  List<Product> productos = [];
   @override
   void initState() {
     super.initState();
+    login();
   }
 
   login() async {
-    var data = {"email": "tannerjador@gmail.com", "password": "123456789"};
-    Network().login(data, 'login');
-
+    // var data = {"email": "tannerjador@gmail.com", "password": "123456789"};
+    // var token = await Network().login(data, 'login');
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    if (localStorage.getString('token') != "") {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    var token = localStorage.getString('token');
+    if (token != "") {
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => LoginPage()));
+      // print(localStorage.getString('token'));
+      var fullUrl = "http://192.168.0.9:8000/shop?mobile=true";
+      var resp = await http.get(Uri.parse(fullUrl), headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      });
+      var dataBody = jsonDecode(resp.body);
+      for (var producto in dataBody['products']['data']) {
+        String id = producto['id'].toString(),
+            price = producto['price'].toString(),
+            offerPrice = producto['offer_price'].toString(),
+            wholersalersPrice = producto['wholersalers_price'].toString(),
+            subcategoryId = producto['subcategory_id'].toString(),
+            companyId = producto['company_id'].toString(),
+            brandId = producto['brand_id'].toString(),
+            name = producto['name'],
+            description = producto['description'],
+            image = dataBody['products_img_url'] + producto['image'],
+            barcode = producto['barcode'];
+
+        productos.add(Product(id, name, description, image, price, offerPrice,
+            wholersalersPrice, subcategoryId, barcode, companyId, brandId));
+      }
     }
   }
 
@@ -65,7 +92,7 @@ class _MainState extends State<Main> {
               print('cambio de página $int');
             },
             children: [
-              Home(),
+              Home(productos),
               globals.isLogged ? AccountPage() : LoginPage(),
               SearchView(),
               Center(
