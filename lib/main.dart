@@ -25,7 +25,6 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
-  List _user = [];
   List<Category> categorias = [];
   List<Product> productos = [];
   @override

@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:localizate/models/products.dart';
 import 'package:localizate/views/tiendas/tiendas.dart';
 import 'package:localizate/globals.dart' as globals;
-import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   Home(this.products, {Key? key}) : super(key: key);
@@ -32,19 +29,17 @@ class _HomeState extends State<Home> {
         'assets/img/banners/bg-principal.png',
       ),
       SizedBox(height: 10),
-      ...List.generate(categorias.length,
-          (index) => CategoryCard(categorias[index], index, widget.products[0]))
+      ...List.generate(
+          categorias.length, (index) => CategoryCard(categorias[index], index))
     ]);
   }
 }
 
 // tarjeta de categoria
 class CategoryCard extends StatelessWidget {
-  const CategoryCard(this.categoria, this.index, this.product, {Key? key})
-      : super(key: key);
+  const CategoryCard(this.categoria, this.index, {Key? key}) : super(key: key);
   final Map categoria;
   final int index;
-  final Product product;
   @override
   Widget build(BuildContext context) {
     final double indexPar = index % 2;
@@ -75,7 +70,7 @@ class CategoryCard extends StatelessWidget {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image: NetworkImage(product.image)))),
+                                image: AssetImage(categoria['img'])))),
                     // image: AssetImage(categoria['img']))),
                     CustomPaint(
                       child: Container(

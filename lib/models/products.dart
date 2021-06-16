@@ -6,10 +6,10 @@ class Category {
 
   bool stockable;
 
-  double comission_percent;
+  double comissionPercentage;
 
   //constructor
-  Category(this.id, this.name, this.comission_percent, this.stockable);
+  Category(this.id, this.name, this.comissionPercentage, this.stockable);
 }
 
 class Subcategory {
@@ -17,21 +17,21 @@ class Subcategory {
 
   String name;
 
-  int category_id;
+  int categoryId;
 
   //constructor
-  Subcategory(this.id, this.name, this.category_id);
+  Subcategory(this.id, this.name, this.categoryId);
 }
 
 //productos
 class Product {
   String id,
-      company_id,
-      subcategory_id,
-      brand_id,
+      companyId,
+      subcategoryId,
+      brandId,
       price,
-      offer_price,
-      wholersalers_price,
+      offerPrice,
+      wholersalersPrice,
       name,
       barcode,
       description,
@@ -43,11 +43,11 @@ class Product {
     this.description,
     this.image,
     this.price,
-    this.offer_price,
-    this.wholersalers_price,
-    this.subcategory_id,
+    this.offerPrice,
+    this.wholersalersPrice,
+    this.subcategoryId,
     this.barcode,
-    this.company_id,
-    this.brand_id,
+    this.companyId,
+    this.brandId,
   );
 }
