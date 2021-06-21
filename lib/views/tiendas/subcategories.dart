@@ -50,7 +50,7 @@ class _SubcategoriesViewState extends State<SubcategoriesView> {
     }
   }
 
-  TextStyle estilosTextoCategorias = TextStyle(
+  TextStyle estilosTexto = TextStyle(
       fontFamily: 'Comfortaa', fontSize: 20, fontWeight: FontWeight.bold);
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class _SubcategoriesViewState extends State<SubcategoriesView> {
                                 child: Center(
                                     child: Text(
                               listasubcategoriasDinamica[index]['name'],
-                              style: estilosTextoCategorias,
+                              style: estilosTexto,
                             )))
                           ],
                         ),
