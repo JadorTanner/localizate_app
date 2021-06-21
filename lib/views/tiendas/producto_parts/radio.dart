@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
 
-/// This is the stateful widget that the main application instantiates.
-class ProductRadioOption extends StatefulWidget {
-  const ProductRadioOption(this.title, this.value, {Key? key})
+class RadioOption extends StatefulWidget {
+  RadioOption(this.options,
+      {this.productColor = const Color(0xffFF830F), Key? key})
       : super(key: key);
-  final String title;
-  final String value;
+  final List options;
+  final productColor;
   @override
-  State<ProductRadioOption> createState() => _ProductRadioOptionState();
+  _RadioOptionState createState() => _RadioOptionState();
 }
 
-/// This is the private State class that goes with ProductRadioOption.
-class _ProductRadioOptionState extends State<ProductRadioOption> {
+class _RadioOptionState extends State<RadioOption> {
+  late String _radioSelected;
+  @override
+  void initState() {
+    super.initState();
+    _radioSelected = widget.options[0];
+  }
+
   @override
   Widget build(BuildContext context) {
-    String _character = widget.title;
-    return ListTile(
-      title: Text(widget.title),
-      leading: Radio(
-        value: widget.value,
-        groupValue: _character,
-        onChanged: (value) {
-          setState(() {
-            _character = value.toString();
-          });
-        },
-      ),
+    return Column(
+      children: [
+        ...widget.options.map((index) => Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Radio<String>(
+                    activeColor: widget.productColor,
+                    value: index,
+                    groupValue: this._radioSelected,
+                    onChanged: (newValue) => {
+                          setState(() => this._radioSelected = newValue!),
+                          print(_radioSelected)
+                        }),
+                Text(index)
+              ],
+            )),
+        Text(_radioSelected)
+      ],
     );
   }
 }

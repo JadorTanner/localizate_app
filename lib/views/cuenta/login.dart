@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/globals.dart' as globals;
-import 'package:localizate/views/cuenta/account.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);

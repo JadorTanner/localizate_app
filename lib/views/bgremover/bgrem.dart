@@ -26,9 +26,9 @@ class OurImageProvider extends ImageProvider<_Ourkey> {
   ImageStreamCompleter load(_Ourkey key, decode) {
     final ourDecoder = (
       Uint8List bytes, {
-      bool allowUpscaling,
-      int cacheWidth,
-      int cacheHeight,
+      bool? allowUpscaling,
+      int? cacheWidth,
+      int? cacheHeight,
     }) async {
       return decode(await whiteToAlpha(bytes),
           cacheWidth: cacheWidth, cacheHeight: cacheHeight);

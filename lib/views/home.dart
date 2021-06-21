@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:localizate/models/products.dart';
-import 'package:localizate/views/tiendas/tiendas.dart';
+import 'package:localizate/views/tiendas/subcategories.dart';
 import 'package:localizate/globals.dart' as globals;
 
+// ignore: must_be_immutable
 class Home extends StatefulWidget {
   Home(this.products, {Key? key}) : super(key: key);
   List<Product> products;
@@ -13,13 +14,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List categorias = globals.categorias;
+  List categorias = [];
+  late var shopCategorias;
   List<Widget> categoriasWidgets = [];
   ScrollController _scrollController = ScrollController();
+  var shop = globals.shop;
 
   @override
   void initState() {
     super.initState();
+    shopCategorias = shop['categories'];
+    for (var i = 0; i < 2; i++) {
+      categorias.add(shopCategorias[i]);
+    }
   }
 
   @override
@@ -58,7 +65,8 @@ class CategoryCard extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Tiendas(categoria)))
+                          builder: (context) => SubcategoriesView(
+                              categoria['subcategories'], categoria)))
                 },
             child: Card(
                 clipBehavior: Clip.hardEdge,
@@ -66,11 +74,11 @@ class CategoryCard extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.centerLeft,
                   children: [
-                    Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(categoria['img'])))),
+                    // Container(
+                    //     decoration: BoxDecoration(
+                    //         image: DecorationImage(
+                    //             fit: BoxFit.cover,
+                    //             image: AssetImage(categoria['img'])))),
                     // image: AssetImage(categoria['img']))),
                     CustomPaint(
                       child: Container(

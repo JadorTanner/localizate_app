@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:localizate/utils/capitalize.dart';
 
-Padding parte_arriba_producto(BuildContext context, producto) {
+Padding parteArribaProducto(BuildContext context, producto) {
   return Padding(
     padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Codigo de producto', style: TextStyle(color: Colors.white)),
-        Text(producto['name'],
+        Text(capitalize(producto['name'], all: true),
             style: Theme.of(context)
                 .textTheme
                 .headline4!
@@ -26,13 +27,17 @@ Padding parte_arriba_producto(BuildContext context, producto) {
                       color: Colors.white, fontWeight: FontWeight.bold))
             ])),
             SizedBox(
-              width: 50,
+              width: MediaQuery.of(context).size.width * 0.3,
             ),
             Expanded(
-                child: Image.asset(
-              producto['img'],
-              fit: BoxFit.fill,
-            ))
+                child: Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.asset(
+                      producto['img'],
+                      fit: BoxFit.fill,
+                    )))
           ],
         )
       ],

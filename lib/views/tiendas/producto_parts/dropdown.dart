@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DropdownProduct extends StatefulWidget {
-  const DropdownProduct(this.values, {Key? key}) : super(key: key);
+  const DropdownProduct(this.title, this.values, {Key? key}) : super(key: key);
 
   final List<String> values;
+  final String title;
   @override
   State<DropdownProduct> createState() => _DropdownProductState();
 }
@@ -19,27 +20,33 @@ class _DropdownProductState extends State<DropdownProduct> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Colors.amber),
-      underline: Container(
-        height: 2,
-        color: Colors.amber,
+    return Row(children: [
+      Text(widget.title),
+      SizedBox(
+        width: 20,
       ),
-      onChanged: (String? newValue) {
-        setState(() {
-          dropdownValue = newValue!;
-        });
-      },
-      items: widget.values.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
+      DropdownButton<String>(
+        value: dropdownValue,
+        icon: const Icon(Icons.arrow_downward),
+        iconSize: 24,
+        elevation: 16,
+        style: const TextStyle(color: Colors.amber),
+        underline: Container(
+          height: 2,
+          color: Colors.amber,
+        ),
+        onChanged: (String? newValue) {
+          setState(() {
+            dropdownValue = newValue!;
+          });
+        },
+        items: widget.values.map((String value) {
+          return DropdownMenuItem(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      )
+    ]);
   }
 }

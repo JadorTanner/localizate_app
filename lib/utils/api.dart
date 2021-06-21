@@ -4,14 +4,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
-  final String _url = 'http://192.168.0.9:8001/api/';
+  final String _url = 'http://192.168.0.9:8001/';
   //if you are using android studio emulator, change localhost to 10.0.2.2
   var token;
 
-  _getToken() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    token = jsonDecode(localStorage.getString('token').toString());
-  }
+  // _getToken() async {
+  //   SharedPreferences localStorage = await SharedPreferences.getInstance();
+  //   token = jsonDecode(localStorage.getString('token').toString());
+  // }
 
   _setToken(token) async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
