@@ -16,6 +16,7 @@ class _ProductoDetailsState extends State<ProductoDetails> {
   var producto;
   var extraFields;
   var checkedOptions = [];
+  int contador = 0;
   @override
   void initState() {
     super.initState();
@@ -143,13 +144,23 @@ class _ProductoDetailsState extends State<ProductoDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CantidadContador(
-                              int.parse(producto['price'].replaceAll(".", ""))),
-                          Text(
-                            "Gs. " + producto['price'],
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6!
-                                .copyWith(fontWeight: FontWeight.bold),
+                              (cont) => setState(() => contador = cont)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Gs. " + producto['price'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text("Total: Gs. " +
+                                  (contador *
+                                          int.parse(producto['price']
+                                              .replaceAll(".", "")))
+                                      .toString())
+                            ],
                           )
                         ],
                       ),
@@ -195,8 +206,8 @@ class _ProductoDetailsState extends State<ProductoDetails> {
 //contador de cantidad a agregar el producto
 // ignore: must_be_immutable
 class CantidadContador extends StatefulWidget {
-  CantidadContador(this.price, {Key? key}) : super(key: key);
-  int price;
+  CantidadContador(this.setContador, {Key? key}) : super(key: key);
+  final setContador;
   @override
   _CantidadContadorState createState() => _CantidadContadorState();
 }
@@ -246,7 +257,6 @@ class _CantidadContadorState extends State<CantidadContador> {
               buildCountButton(Icon(Icons.add), 'add'),
             ],
           ),
-          Text("Total: Gs. " + (contador * widget.price).toString())
         ]);
   }
 
@@ -269,7 +279,8 @@ class _CantidadContadorState extends State<CantidadContador> {
                     ? contador -= 1
                     // ignore: unnecessary_statements
                     : null;
-          })
+          }),
+          widget.setContador(contador)
         },
         child: icon,
       ),
