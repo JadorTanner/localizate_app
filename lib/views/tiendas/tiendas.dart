@@ -10,12 +10,13 @@ class Tiendas extends StatefulWidget {
   _TiendasState createState() => _TiendasState();
 }
 
-class _TiendasState extends State<Tiendas> with SingleTickerProviderStateMixin {
+class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
   TextEditingController editingController = TextEditingController();
   late TabController _tabController;
   var shop = globals.shop;
   var categories;
   List subcategories = [];
+  List subcategoriesPages = [];
   TextStyle estilosTexto = TextStyle(
       fontFamily: 'Comfortaa', fontSize: 20, fontWeight: FontWeight.bold);
   @override
@@ -24,6 +25,9 @@ class _TiendasState extends State<Tiendas> with SingleTickerProviderStateMixin {
     categories = shop['categories'];
     for (var i = 0; i < categories.length; i++) {
       subcategories.add(categories[i]['subcategories']);
+    }
+    for (var i = 0; i < subcategories.length; i++) {
+      subcategoriesPages.add(subcategories[i]);
     }
     _tabController = TabController(length: 2, vsync: this);
   }
@@ -79,49 +83,110 @@ class _TiendasState extends State<Tiendas> with SingleTickerProviderStateMixin {
         ),
         Expanded(
             child: TabBarView(controller: _tabController, children: [
-          ...List.generate(
-              categories.length,
-              (index) => SingleChildScrollView(
-                    child: Column(
-                      children:  
-                      [...List.generate(subcategories.length,
-                          (indexSubcategory) =>
-                        Column(children: [...List.generate(
-                            subcategories[indexSubcategory],
-                            (index) => GestureDetector(
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              TiendasSubcategorias(
-                                                  subcategories[
-                                                      index]))),
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 20),
-                                    margin: EdgeInsets.symmetric(vertical: 10),
-                                    height: 150,
-                                    child: Card(
-                                      semanticContainer: true,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                              child: Center(
-                                                  child: Text(
-                                            subcategories[index][0]
-                                                ['name'],
-                                            style: estilosTexto,
-                                          )))
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ))]
-                      ))]
-                    ,
-                  ))
+          ...List.generate(categories.length, (index) => buildSubcategoryPage())
         ]))
+        /*Expanded(
+            child: TabBarView(controller: _tabController, children: [
+          ...List.generate(subcategoriesPages.length, (indexpage) {
+            print(indexpage);
+            return Column(
+              children: [
+                    GestureDetector(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      TiendasSubcategorias(
+                                          subcategoriesPages[indexpage]
+                                              [indexSubcategory]))),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            height: 150,
+                            child: Card(
+                              semanticContainer: true,
+                              child: Row(
+                                children: [
+                                  Text('subcategoria')
+                                  // Expanded(
+                                  //     child: Center(
+                                  //         child: Text(
+                                  //   subcategoriesPages[indexpage]
+                                  //       [indexSubcategory]['name'],
+                                  //   style: estilosTexto,
+                                  // )))
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+              ],
+            );
+            
+          })
+        ]))*/
       ],
     ));
+  }
+
+  Column buildSubcategoryPage() {
+    TabController _subcategoryController =
+        TabController(length: 6, vsync: this);
+    return Column(
+      children: [
+        TabBar(controller: _subcategoryController, isScrollable: true, tabs: [
+          ...List.generate(
+              6,
+              (indexSubcat) => Tab(
+                    child: Text('subcategoria ' + indexSubcat.toString()),
+                    icon: Icon(Icons.fastfood),
+                  ))
+        ]),
+        Expanded(
+            child: TabBarView(controller: _subcategoryController, children: [
+          ...List.generate(
+            6,
+            (index) => SingleChildScrollView(
+              child: Column(
+                children: [
+                  ...List.generate(
+                      6,
+                      (index) => GestureDetector(
+                            // onTap: () => Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (BuildContext context) => TiendasSubcategorias(
+                            //             subcategoriesPages[indexpage][indexSubcategory]))),
+                            onTap: () => {},
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              height: 150,
+                              child: Card(
+                                  semanticContainer: true,
+                                  child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    child: Row(
+                                      children: [
+                                        Text('Tienda')
+                                        // Expanded(
+                                        //     child: Center(
+                                        //         child: Text(
+                                        //   subcategoriesPages[indexpage]
+                                        //       [indexSubcategory]['name'],
+                                        //   style: estilosTexto,
+                                        // )))
+                                      ],
+                                    ),
+                                  )),
+                            ),
+                          ))
+                ],
+              ),
+            ),
+          )
+        ]))
+      ],
+    );
   }
 }
