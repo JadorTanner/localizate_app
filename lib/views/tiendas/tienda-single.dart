@@ -123,11 +123,14 @@ class _TiendaState extends State<Tienda> {
   }
 }
 
+// ignore: must_be_immutable
 class ProductoTienda extends StatelessWidget {
-  const ProductoTienda(this._producto, {Key? key}) : super(key: key);
+  ProductoTienda(this._producto, {Key? key}) : super(key: key);
   final _producto;
+  late String imgUrl = globals.imgUrl;
   @override
   Widget build(BuildContext context) {
+    print(imgUrl + _producto['image']);
     return Padding(
       padding: EdgeInsets.all(10),
       child: GestureDetector(
@@ -146,19 +149,22 @@ class ProductoTienda extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // Image.asset(
-                            //   _producto['img'],
-                            //   height: 90,
-                            //   width: 90,
-                            //   fit: BoxFit.cover,
-                            // ),
+                            Image.network(
+                              imgUrl +
+                                  (_producto['image'] != null
+                                      ? _producto['image']
+                                      : "placeholder.png"),
+                              height: 90,
+                              width: 90,
+                              fit: BoxFit.cover,
+                            ),
                             SizedBox(width: 20),
                             Expanded(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(_producto['name']),
+                                  Text(_producto['name'].toString()),
                                   Text(_producto['price'].toString())
                                 ],
                               ),

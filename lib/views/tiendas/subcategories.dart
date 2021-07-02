@@ -55,23 +55,22 @@ class _SubcategoriesViewState extends State<SubcategoriesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:
-            AppBar(toolbarHeight: 100, title: Text(widget.categoria['name'])),
-        // appBar: AppBar(
-        //   toolbarHeight: 100,
-        //   title: TextField(
-        //     onChanged: (value) {
-        //       filterSearchResults(value);
-        //     },
-        //     controller: editingController,
-        //     decoration: InputDecoration(
-        //         labelText: "Buscar tienda de " + widget.sub['name'],
-        //         hintText: "Buscar tienda de " + widget.sub['name'],
-        //         prefixIcon: Icon(Icons.search),
-        //         border: OutlineInputBorder(
-        //             borderRadius: BorderRadius.all(Radius.circular(25.0)))),
-        //   ),
-        // ),
+        // appBar: AppBar(toolbarHeight: 100, title: Text(widget.categoria.name)),
+        appBar: AppBar(
+          toolbarHeight: 100,
+          title: TextField(
+            onChanged: (value) {
+              filterSearchResults(value);
+            },
+            controller: editingController,
+            decoration: InputDecoration(
+                labelText: "Buscar tiendas",
+                hintText: "Buscar tiendas",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+          ),
+        ),
         body: Container(
             child: Column(
           children: <Widget>[
@@ -84,9 +83,8 @@ class _SubcategoriesViewState extends State<SubcategoriesView> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                TiendasSubcategorias(
-                                    listasubcategoriasDinamica[index]))),
+                            builder: (BuildContext context) => Tienda(
+                                listasubcategoriasDinamica[index]['id']))),
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       margin: EdgeInsets.symmetric(vertical: 10),

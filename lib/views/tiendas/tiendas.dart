@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:localizate/models/CategoryModel.dart';
 import 'package:localizate/views/tiendas/tienda-single.dart';
@@ -16,12 +14,16 @@ class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
   TextEditingController editingController = TextEditingController();
   TextStyle estilosTexto = TextStyle(
       fontFamily: 'Comfortaa', fontSize: 20, fontWeight: FontWeight.bold);
-  late List<Category> categories;
+  List<Category> categories = [];
   late TabController _categoriesTabController;
   @override
   void initState() {
     super.initState();
-    categories = widget.data;
+    for (var i = 0; i < widget.data.length; i++) {
+      if (widget.data[i].subcategories.length > 0) {
+        categories.add(widget.data[i]);
+      }
+    }
     _categoriesTabController =
         TabController(length: categories.length, vsync: this);
   }
@@ -83,13 +85,17 @@ class SubcategoryTabView extends StatefulWidget {
 
 class _SubcategoryTabViewState extends State<SubcategoryTabView>
     with SingleTickerProviderStateMixin {
-  var subcategories;
+  List subcategories = [];
   late TabController _subcategoriesTabController;
   var windowSizes;
   @override
   void initState() {
     super.initState();
-    subcategories = widget.subcategories;
+    for (var i = 0; i < widget.subcategories.length; i++) {
+      if (widget.subcategories[i]['brands'].length > 0) {
+        subcategories.add(widget.subcategories[i]);
+      }
+    }
     _subcategoriesTabController =
         TabController(length: subcategories.length, vsync: this);
   }

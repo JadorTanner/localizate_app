@@ -63,7 +63,10 @@ class _MainState extends State<Main> {
             //vistas (home, cuenta, tienda, carrito)
             body: FutureBuilder(
               future:
-                  Future.delayed(Duration(seconds: 3), () => getCategories()),
+                  // Future.delayed(Duration(seconds: 3), () =>
+                  getCategories()
+              // ),
+              ,
               initialData: "",
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
@@ -79,7 +82,7 @@ class _MainState extends State<Main> {
                         print('cambio de página $int');
                       },
                       children: [
-                        Home(productos),
+                        Home(data),
                         globals.isLogged ? AccountPage() : LoginPage(),
                         Tiendas(data),
                         Center(

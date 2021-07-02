@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:localizate/models/productModel.dart';
+import 'package:localizate/models/CategoryModel.dart';
 import 'package:localizate/views/tiendas/subcategories.dart';
-import 'package:localizate/globals.dart' as globals;
 
 // ignore: must_be_immutable
 class Home extends StatefulWidget {
-  Home(this.products, {Key? key}) : super(key: key);
-  List<ProductModel> products;
+  Home(this.categories, {Key? key}) : super(key: key);
+  List<Category> categories;
 
   @override
   _HomeState createState() => _HomeState();
@@ -15,17 +14,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List categorias = [];
-  late var shopCategorias;
-  List<Widget> categoriasWidgets = [];
   ScrollController _scrollController = ScrollController();
-  var shop = globals.shop;
 
   @override
   void initState() {
     super.initState();
-    shopCategorias = shop['categories'];
-    for (var i = 0; i < 2; i++) {
-      categorias.add(shopCategorias[i]);
+    for (var i = 0; i < widget.categories.length; i++) {
+      if (widget.categories[i].subcategories.length > 0) {
+        categorias.add(widget.categories[i]);
+      }
     }
   }
 
@@ -45,7 +42,7 @@ class _HomeState extends State<Home> {
 // tarjeta de categoria
 class CategoryCard extends StatelessWidget {
   const CategoryCard(this.categoria, this.index, {Key? key}) : super(key: key);
-  final Map categoria;
+  final Category categoria;
   final int index;
   @override
   Widget build(BuildContext context) {
@@ -66,7 +63,7 @@ class CategoryCard extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => SubcategoriesView(
-                              categoria['subcategories'], categoria)))
+                              categoria.subcategories, categoria)))
                 },
             child: Card(
                 clipBehavior: Clip.hardEdge,
@@ -86,7 +83,7 @@ class CategoryCard extends StatelessWidget {
                           alignment: indexPar == 0
                               ? Alignment.bottomLeft
                               : Alignment.bottomRight,
-                          child: Text(categoria['name'],
+                          child: Text(categoria.name,
                               style: estilosTextoCategorias)),
                       size: Size(
                           100,
