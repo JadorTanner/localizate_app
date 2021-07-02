@@ -12,31 +12,13 @@ class Tiendas extends StatefulWidget {
 class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
   TextEditingController editingController = TextEditingController();
   late TabController _tabController;
-<<<<<<< HEAD
-  var shop = globals.shop;
-  var categories;
-  List subcategories = [];
-  List subcategoriesPages = [];
-=======
   var categories = globals.categories;
->>>>>>> origin/master
   TextStyle estilosTexto = TextStyle(
       fontFamily: 'Comfortaa', fontSize: 20, fontWeight: FontWeight.bold);
   @override
   void initState() {
     super.initState();
-<<<<<<< HEAD
-    categories = shop['categories'];
-    for (var i = 0; i < categories.length; i++) {
-      subcategories.add(categories[i]['subcategories']);
-    }
-    for (var i = 0; i < subcategories.length; i++) {
-      subcategoriesPages.add(subcategories[i]);
-    }
-    _tabController = TabController(length: 2, vsync: this);
-=======
     _tabController = TabController(length: categories.length, vsync: this);
->>>>>>> origin/master
   }
 //filtrar por busqueda
 
@@ -195,7 +177,7 @@ class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
           // ]))
         ]))
       ],
-    ));
+    );
   }
 }
 

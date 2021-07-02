@@ -12,6 +12,7 @@ void main() => runApp(MaterialApp(
       theme: ThemeData(
           primaryColor: Color(0xFFFF830F), accentColor: Color(0xFFD87920)),
       home: Main(),
+      debugShowMaterialGrid: false,
     ));
 
 class Main extends StatefulWidget {
