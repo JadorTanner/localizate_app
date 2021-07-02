@@ -2,6 +2,7 @@ library localizate_app_v1.globals;
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+String url = 'http://181.120.116.15:8000/api/';
 bool isLogged = false;
 List<Map> categorias = [
   {

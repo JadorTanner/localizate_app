@@ -18,7 +18,6 @@ class _AccountPageState extends State<AccountPage> {
           Center(
             child: Text(_userName),
           ),
-          Text(globals.isLogged ? 'Logueado' : 'no logueado')
         ]));
   }
 }

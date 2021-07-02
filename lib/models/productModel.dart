@@ -1,30 +1,5 @@
-class Category {
-  //propiedades del producto
-  int id;
-
-  String name;
-
-  bool stockable;
-
-  double comissionPercentage;
-
-  //constructor
-  Category(this.id, this.name, this.comissionPercentage, this.stockable);
-}
-
-class Subcategory {
-  int id;
-
-  String name;
-
-  int categoryId;
-
-  //constructor
-  Subcategory(this.id, this.name, this.categoryId);
-}
-
 //productos
-class Product {
+class ProductModel {
   String id,
       companyId,
       subcategoryId,
@@ -37,7 +12,7 @@ class Product {
       description,
       image;
 
-  Product(
+  ProductModel(
     this.id,
     this.name,
     this.description,

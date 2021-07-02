@@ -1,39 +1,71 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:localizate/views/tiendas/producto/producto.dart';
+import 'package:http/http.dart' as http;
+import 'package:localizate/globals.dart' as globals;
 
 class Tienda extends StatefulWidget {
-  Tienda(this.tienda, {Key? key}) : super(key: key);
+  Tienda(this.id, {Key? key}) : super(key: key);
 
-  final Map tienda;
+  final int id;
   // final String img;
   @override
   _TiendaState createState() => _TiendaState();
 }
 
 class _TiendaState extends State<Tienda> {
+  Future brandDetails() async {
+    var response = await http
+        .get(Uri.parse(globals.url + "brand/" + widget.id.toString()));
+    var jsonResponse = jsonDecode(response.body);
+    return jsonResponse;
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Map> _productos = widget.tienda['products'];
     return Scaffold(
-        appBar: AppBar(),
-        body: Column(children: [
-          ...List.generate(
-              _productos.length,
-              (index) => GestureDetector(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              ProductoDetails(_productos[index]))),
-                  child: Card(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Row(
-                            children: [Text(_productos[index]['name'])],
-                          )))))
-        ]));
+      appBar: AppBar(),
+      body: FutureBuilder(
+        future: brandDetails(),
+        initialData: "",
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              var data = snapshot.data;
+              return Column(children: [
+                Text(data['name']),
+                Expanded(
+                    child: ListView(
+                  children: List.generate(data['products'].length, (prodIndex) {
+                    return ProductoTienda(data['products'][prodIndex]);
+                  }),
+                ))
+                // ...List.generate(
+                //     _productos.length,
+                //     (index) => GestureDetector(
+                //         onTap: () => Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (BuildContext context) =>
+                //                     ProductoDetails(_productos[index]))),
+                //         child: Card(
+                //             margin:
+                //                 EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                //             child: Padding(
+                //                 padding: EdgeInsets.all(20),
+                //                 child: Row(
+                //                   children: [Text(_productos[index]['name'])],
+                //                 )))))
+              ]);
+            default:
+              return Text('done');
+          }
+        },
+      ),
+    );
     // return Scaffold(
     //     floatingActionButton: IconButton(
     //         onPressed: () => Navigator.pop(context),
@@ -92,10 +124,8 @@ class _TiendaState extends State<Tienda> {
 }
 
 class ProductoTienda extends StatelessWidget {
-  const ProductoTienda(this._producto, this.index, {Key? key})
-      : super(key: key);
-  final Map _producto;
-  final int index;
+  const ProductoTienda(this._producto, {Key? key}) : super(key: key);
+  final _producto;
   @override
   Widget build(BuildContext context) {
     return Padding(

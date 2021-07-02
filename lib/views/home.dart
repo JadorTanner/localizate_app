@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:localizate/models/products.dart';
+import 'package:localizate/models/productModel.dart';
 import 'package:localizate/views/tiendas/subcategories.dart';
 import 'package:localizate/globals.dart' as globals;
 
 // ignore: must_be_immutable
 class Home extends StatefulWidget {
   Home(this.products, {Key? key}) : super(key: key);
-  List<Product> products;
+  List<ProductModel> products;
 
   @override
   _HomeState createState() => _HomeState();

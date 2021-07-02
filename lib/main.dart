@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:localizate/models/products.dart';
+import 'package:localizate/models/CategoryModel.dart';
+import 'package:localizate/models/productModel.dart';
+import 'package:localizate/utils/api.dart';
 import 'package:localizate/views/cuenta/account.dart';
 import 'package:localizate/views/cuenta/login.dart';
 import 'package:localizate/views/home.dart';
-import 'package:localizate/views/search.dart';
+import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
 import 'package:localizate/views/tiendas/tiendas.dart';
 
@@ -22,11 +26,22 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
-  List<Category> categorias = [];
-  List<Product> productos = [];
+  List<ProductModel> productos = [];
+  final String _url = 'http://181.120.116.15:8000/api/';
+
   @override
   void initState() {
     super.initState();
+  }
+
+  Future getCategories() async {
+    var response = await http.get(Uri.parse(_url + "categories"));
+    var jsonCategories = jsonDecode(response.body)['categories'];
+    List<Category> categories = List.generate(
+        jsonCategories.length,
+        (index) => Category(jsonCategories[index]['name'],
+            jsonCategories[index]['subcategories']));
+    return categories;
   }
 
   @override
@@ -46,28 +61,45 @@ class _MainState extends State<Main> {
             ),
 
             //vistas (home, cuenta, tienda, carrito)
-            body: PageView(
-              controller: _pageController,
-              onPageChanged: (int) {
-                print('cambio de página $int');
+            body: FutureBuilder(
+              future:
+                  Future.delayed(Duration(seconds: 3), () => getCategories()),
+              initialData: "",
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case ConnectionState.done:
+                    var data = snapshot.data;
+                    return PageView(
+                      controller: _pageController,
+                      onPageChanged: (int) {
+                        print('cambio de página $int');
+                      },
+                      children: [
+                        Home(productos),
+                        globals.isLogged ? AccountPage() : LoginPage(),
+                        Tiendas(data),
+                        Center(
+                          child: Container(
+                            child:
+                                Text('Aun no has agregado algo a tu carrito'),
+                          ),
+                        ),
+                        Center(
+                          child: Container(
+                            child: Text('Contacto'),
+                          ),
+                        )
+                      ],
+                    );
+                  default:
+                    return Text('done');
+                }
               },
-              children: [
-                Home(productos),
-                globals.isLogged ? AccountPage() : LoginPage(),
-                Tiendas(),
-                Center(
-                  child: Container(
-                    child: Text('Aun no has agregado algo a tu carrito'),
-                  ),
-                ),
-                Center(
-                  child: Container(
-                    child: Text('Contacto'),
-                  ),
-                )
-              ],
             ),
-
             //botón central flotante de búsqueda
             floatingActionButton: FloatingActionButton(
               child: Container(
