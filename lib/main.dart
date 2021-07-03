@@ -76,6 +76,7 @@ class _MainState extends State<Main> {
                     );
                   case ConnectionState.done:
                     var data = snapshot.data;
+                    print(data);
                     return PageView(
                       controller: _pageController,
                       onPageChanged: (int) {

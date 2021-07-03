@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:localizate/views/tiendas/producto/producto.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
+import 'package:localizate/views/transitions/productPageRouter.dart';
 
 class Tienda extends StatefulWidget {
   Tienda(this.id, {Key? key}) : super(key: key);
@@ -134,12 +135,8 @@ class ProductoTienda extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(10),
       child: GestureDetector(
-          onTap: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProductoDetails(_producto)))
-              },
+          onTap: () =>
+              {Navigator.push(context, SizeRoute(ProductoDetails(_producto)))},
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Card(

@@ -21,7 +21,11 @@ class _ProductoDetailsState extends State<ProductoDetails> {
   void initState() {
     super.initState();
     producto = widget.producto;
-    getExtraFields(producto['special_fields']);
+    if (producto['special_fields'] != null) {
+      getExtraFields(producto['special_fields']);
+    } else {
+      extraFields = [];
+    }
   }
 
   List<Widget> getExtraFields(fields) {
