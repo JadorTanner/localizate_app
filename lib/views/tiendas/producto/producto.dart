@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:localizate/models/productModel.dart';
 import 'package:localizate/utils/capitalize.dart';
 import 'package:localizate/views/tiendas/producto_parts/checkbox.dart';
 import 'package:localizate/views/tiendas/producto_parts/dropdown.dart';
+import 'package:provider/provider.dart';
 
 class ProductoDetails extends StatefulWidget {
   ProductoDetails(this.producto, {Key? key}) : super(key: key);
@@ -16,7 +19,9 @@ class _ProductoDetailsState extends State<ProductoDetails> {
   var producto;
   var extraFields;
   var checkedOptions = [];
-  int contador = 0;
+  int contador = 1;
+  bool isOnCart = false;
+  var items;
   @override
   void initState() {
     super.initState();
@@ -90,6 +95,10 @@ class _ProductoDetailsState extends State<ProductoDetails> {
 
   @override
   Widget build(BuildContext context) {
+    items = context.watch<CartProvider>().items;
+    isOnCart = items.indexWhere((item) => item['id'] == producto['id']) != -1
+        ? true
+        : false;
     return Scaffold(
       backgroundColor: Colors.orange,
       floatingActionButton: FloatingActionButton(
@@ -107,15 +116,31 @@ class _ProductoDetailsState extends State<ProductoDetails> {
       body: Column(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
-            height: 400,
-            child: Center(
-                child: Icon(
-              Icons.image,
-              size: 50 * 4,
-              color: Colors.white,
-            )),
-          ),
+              width: MediaQuery.of(context).size.width,
+              height: 400,
+              child: CarouselSlider(
+                options: CarouselOptions(),
+                items: [
+                  Center(
+                      child: Icon(
+                    Icons.image,
+                    size: 50 * 4,
+                    color: Colors.white,
+                  )),
+                  Center(
+                      child: Icon(
+                    Icons.image_outlined,
+                    size: 50 * 4,
+                    color: Colors.white,
+                  )),
+                  Center(
+                      child: Icon(
+                    Icons.image,
+                    size: 50 * 4,
+                    color: Colors.white,
+                  )),
+                ],
+              )),
           Expanded(
               child: Container(
                   padding: EdgeInsets.all(20),
@@ -175,27 +200,64 @@ class _ProductoDetailsState extends State<ProductoDetails> {
                           Icon(Icons.add_shopping_cart),
                           SizedBox(width: 40),
                           Expanded(
-                            child: TextButton(
-                              onPressed: () => {},
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20))),
-                                backgroundColor: MaterialStateProperty.all(
-                                    Color(int.parse("0xffFF830F"))),
-                              ),
-                              child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 20),
-                                  child: Text(
-                                    "Agregar al carrito",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ),
+                            child: isOnCart
+                                ? TextButton(
+                                    onPressed: () => {
+                                      context
+                                          .read<CartProvider>()
+                                          .removeFromCart(producto),
+                                      setState(() => isOnCart = false)
+                                    },
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Color(int.parse("0xffFF830F"))),
+                                    ),
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 20),
+                                        child: Text(
+                                          "Remover del carrito",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                  )
+                                : TextButton(
+                                    onPressed: () => {
+                                      if (contador > 0)
+                                        {
+                                          context
+                                              .read<CartProvider>()
+                                              .addToCart(producto, contador),
+                                          setState(() => isOnCart = true)
+                                        }
+                                    },
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Color(int.parse("0xffFF830F"))),
+                                    ),
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 20),
+                                        child: Text(
+                                          "Agregar al carrito",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                  ),
                           )
                         ],
                       )

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:localizate/globals.dart' as globals;
 
-class AccountPage extends StatefulWidget {
-  AccountPage({Key? key}) : super(key: key);
-
+class Account extends StatefulWidget {
+  Account(this.logOut, {Key? key}) : super(key: key);
+  var logOut;
   @override
-  _AccountPageState createState() => _AccountPageState();
+  _AccountState createState() => _AccountState();
 }
 
-class _AccountPageState extends State<AccountPage> {
+class _AccountState extends State<Account> {
   String _userName = 'Jador';
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,14 @@ class _AccountPageState extends State<AccountPage> {
         padding: EdgeInsets.all(20),
         child: Column(children: [
           Center(
-            child: Text(_userName),
+            child: Column(
+              children: [
+                Text(_userName),
+                ElevatedButton(
+                    onPressed: () => widget.logOut(),
+                    child: Text("cerrar sesión"))
+              ],
+            ),
           ),
         ]));
   }

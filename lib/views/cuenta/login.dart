@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:localizate/globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  LoginPage(this.setLogin, {Key? key}) : super(key: key);
+  var setLogin;
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -12,6 +12,11 @@ TextEditingController _emailController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -35,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                   onPressed: () => {}, child: Text('Olvidé mi contraseña')),
               TextButton(
-                onPressed: () => {globals.isLogged = true, setState(() {})},
+                onPressed: () => widget.setLogin(),
                 child: Text(
                   'Iniciar sesión',
                   style: TextStyle(color: Colors.white),

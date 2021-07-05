@@ -3,20 +3,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:localizate/models/CategoryModel.dart';
 import 'package:localizate/models/productModel.dart';
-import 'package:localizate/utils/api.dart';
-import 'package:localizate/views/cuenta/account.dart';
-import 'package:localizate/views/cuenta/login.dart';
+import 'package:localizate/views/cart/cartPage.dart';
+import 'package:localizate/views/cuenta/cuenta_page.dart';
 import 'package:localizate/views/home.dart';
 import 'package:http/http.dart' as http;
-import 'package:localizate/globals.dart' as globals;
 import 'package:localizate/views/tiendas/tiendas.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MaterialApp(
+void main() => runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
+    child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primaryColor: Color(0xFFFF830F), accentColor: Color(0xFFD87920)),
       home: Main(),
-    ));
+    )));
 
 class Main extends StatefulWidget {
   Main({Key? key}) : super(key: key);
@@ -36,13 +37,21 @@ class _MainState extends State<Main> {
 
   Future getCategories() async {
     var response = await http.get(Uri.parse(_url + "categories"));
-    var jsonCategories = jsonDecode(response.body)['categories'];
-    List<Category> categories = List.generate(
-        jsonCategories.length,
-        (index) => Category(jsonCategories[index]['name'],
-            jsonCategories[index]['subcategories']));
+    var jsonCategories;
+    List<Category> categories;
+    if (response.statusCode == 200) {
+      jsonCategories = jsonDecode(response.body)['categories'];
+      categories = List.generate(
+          jsonCategories.length,
+          (index) => Category(jsonCategories[index]['name'],
+              jsonCategories[index]['subcategories']));
+    } else {
+      categories = [];
+    }
     return categories;
   }
+
+  Future isLogged() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -84,14 +93,9 @@ class _MainState extends State<Main> {
                       },
                       children: [
                         Home(data),
-                        globals.isLogged ? AccountPage() : LoginPage(),
+                        AccountPage(),
                         Tiendas(data),
-                        Center(
-                          child: Container(
-                            child:
-                                Text('Aun no has agregado algo a tu carrito'),
-                          ),
-                        ),
+                        CartPage(),
                         Center(
                           child: Container(
                             child: Text('Contacto'),

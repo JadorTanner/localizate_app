@@ -41,6 +41,7 @@ class _TiendaState extends State<Tienda> {
                 Expanded(
                     child: ListView(
                   children: List.generate(data['products'].length, (prodIndex) {
+                    print(data['products'][prodIndex]);
                     return ProductoTienda(data['products'][prodIndex]);
                   }),
                 ))
@@ -135,8 +136,12 @@ class ProductoTienda extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(10),
       child: GestureDetector(
-          onTap: () =>
-              {Navigator.push(context, SizeRoute(ProductoDetails(_producto)))},
+          onTap: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => ProductoDetails(_producto)))
+              },
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Card(
@@ -146,15 +151,15 @@ class ProductoTienda extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image.network(
-                              imgUrl +
-                                  (_producto['image'] != null
-                                      ? _producto['image']
-                                      : "placeholder.png"),
-                              height: 90,
-                              width: 90,
-                              fit: BoxFit.cover,
-                            ),
+                            // Image.network(
+                            //   imgUrl +
+                            //       (_producto['image'] != null
+                            //           ? _producto['image']
+                            //           : "placeholder.png"),
+                            //   height: 90,
+                            //   width: 90,
+                            //   fit: BoxFit.cover,
+                            // ),
                             SizedBox(width: 20),
                             Expanded(
                               child: Column(
