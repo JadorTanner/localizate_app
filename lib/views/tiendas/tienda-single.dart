@@ -41,7 +41,6 @@ class _TiendaState extends State<Tienda> {
                 Expanded(
                     child: ListView(
                   children: List.generate(data['products'].length, (prodIndex) {
-                    print(data['products'][prodIndex]);
                     return ProductoTienda(data['products'][prodIndex]);
                   }),
                 ))
@@ -132,7 +131,6 @@ class ProductoTienda extends StatelessWidget {
   late String imgUrl = globals.imgUrl;
   @override
   Widget build(BuildContext context) {
-    print(imgUrl + _producto['image']);
     return Padding(
       padding: EdgeInsets.all(10),
       child: GestureDetector(

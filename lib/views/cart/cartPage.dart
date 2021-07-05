@@ -46,9 +46,18 @@ class Items extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(items[index]['name']),
-                          Text(items[index]['price']),
-                          Text(items[index]['cantidad']),
+                          Column(
+                            children: [
+                              Text(items[index]['name']),
+                              Text('P. Unitario: ${items[index]['price']}'),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text('Total: ${items[index]['productTotal']}'),
+                              Text('Cantidad: ${items[index]['cantidad']}'),
+                            ],
+                          ),
                           SizedBox(
                             height: 50,
                           ),

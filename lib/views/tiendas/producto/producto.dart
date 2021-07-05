@@ -96,9 +96,8 @@ class _ProductoDetailsState extends State<ProductoDetails> {
   @override
   Widget build(BuildContext context) {
     items = context.watch<CartProvider>().items;
-    isOnCart = items.indexWhere((item) => item['id'] == producto['id']) != -1
-        ? true
-        : false;
+    int index = items.indexWhere((item) => item['id'] == producto['id']);
+    isOnCart = index != -1 ? true : false;
     return Scaffold(
       backgroundColor: Colors.orange,
       floatingActionButton: FloatingActionButton(

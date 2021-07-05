@@ -40,7 +40,6 @@ class _SubcategoriesViewState extends State<SubcategoriesView>
       List dummyListData = [];
       dummySearchList.forEach((item) {
         if (item['name'].toLowerCase().contains(query.toLowerCase())) {
-          print('contiene');
           dummyListData.add(item);
         }
       });

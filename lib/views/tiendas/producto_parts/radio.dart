@@ -31,7 +31,6 @@ class _RadioOptionState extends State<RadioOption> {
                     groupValue: this._radioSelected,
                     onChanged: (newValue) => {
                           setState(() => this._radioSelected = newValue!),
-                          print(_radioSelected)
                         }),
                 Text(index)
               ],

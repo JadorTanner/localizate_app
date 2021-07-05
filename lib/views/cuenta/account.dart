@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:localizate/globals.dart' as globals;
+import 'package:http/http.dart' as http;
+
+String url = globals.url;
 
 class Account extends StatefulWidget {
   Account(this.logOut, {Key? key}) : super(key: key);
@@ -9,6 +13,15 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   String _userName = 'Jador';
+
+  Future logout() async {
+    var response = await http.post(Uri.parse(url + 'logout'));
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      widget.logOut();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -19,8 +32,7 @@ class _AccountState extends State<Account> {
               children: [
                 Text(_userName),
                 ElevatedButton(
-                    onPressed: () => widget.logOut(),
-                    child: Text("cerrar sesión"))
+                    onPressed: () => logout(), child: Text("cerrar sesión"))
               ],
             ),
           ),

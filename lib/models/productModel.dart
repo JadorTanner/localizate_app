@@ -33,24 +33,23 @@ class CartProvider with ChangeNotifier {
   List _items = [];
   List get items => _items;
   void addToCart(item, int cantidad) {
-    int parsedPrice = int.parse(item['price'].replaceAll(".", ""));
+    var product = item;
+    int parsedPrice = int.parse(product['price'].replaceAll(".", ""));
     int totalPoduct = parsedPrice * cantidad;
-    item['cantidad'] = cantidad.toString();
-    item['price'] = totalPoduct.toString();
+    product['cantidad'] = cantidad.toString();
+    product['productTotal'] = totalPoduct.toString();
     _total += totalPoduct;
-    _items.add(item);
+    _items.add(product);
     notifyListeners();
   }
 
   int getPosition(product) {
-    print(items
-        .indexWhere((element) => element['barcode'] == product['barcode']));
     return items.indexWhere((element) => element['id'] == product['id']);
   }
 
   void removeFromCart(item) {
     int indexOnCart = getPosition(item);
-    int itemPrice = int.parse(items[indexOnCart]['price']);
+    int itemPrice = int.parse(items[indexOnCart]['productTotal']);
     _items.removeAt(indexOnCart);
     _total -= itemPrice;
     notifyListeners();

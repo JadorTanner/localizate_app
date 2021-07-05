@@ -38,6 +38,7 @@ class _MainState extends State<Main> {
   Future getCategories() async {
     var response = await http.get(Uri.parse(_url + "categories"));
     var jsonCategories;
+    print(response);
     List<Category> categories;
     if (response.statusCode == 200) {
       jsonCategories = jsonDecode(response.body)['categories'];
@@ -50,8 +51,6 @@ class _MainState extends State<Main> {
     }
     return categories;
   }
-
-  Future isLogged() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -85,22 +84,38 @@ class _MainState extends State<Main> {
                     );
                   case ConnectionState.done:
                     var data = snapshot.data;
-                    print(data);
+                    List<Category> categorias = [];
+                    if (data != null) {
+                      for (var i = 0; i < data.length; i++) {
+                        if (data[i].subcategories.length > 0) {
+                          for (var s = 0;
+                              s < data[i].subcategories.length;
+                              s++) {
+                            if (data[i].subcategories[s]['brands'].length > 0) {
+                              categorias.add(data[i]);
+                              if (categorias.length >= 4) {
+                                break;
+                              }
+                            }
+                          }
+                        }
+                      }
+                    } else {
+                      categorias = [];
+                    }
                     return PageView(
                       controller: _pageController,
-                      onPageChanged: (int) {
-                        print('cambio de página $int');
-                      },
+                      onPageChanged: (int) {},
                       children: [
-                        Home(data),
+                        Home(categorias),
                         AccountPage(),
-                        Tiendas(data),
+                        Tiendas(categorias),
                         CartPage(),
-                        Center(
-                          child: Container(
-                            child: Text('Contacto'),
-                          ),
-                        )
+                        // Center(
+                        //   child: Container(
+                        //     child: Text('Contacto'),
+                        //   ),
+                        // )
                       ],
                     );
                   default:
@@ -153,7 +168,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             bottomAppbarButton(widget._pageController, Icons.person, 1),
             bottomAppbarButton(widget._pageController, Icons.shopping_bag, 2),
             bottomAppbarButton(widget._pageController, Icons.shopping_cart, 3),
-            bottomAppbarButton(widget._pageController, Icons.phone, 4)
+            // bottomAppbarButton(widget._pageController, Icons.phone, 4)
           ]),
         ));
   }

@@ -19,16 +19,16 @@ class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    for (var i = 0; i < widget.data.length; i++) {
-      if (widget.data[i].subcategories.length > 0) {
-        for (var s = 0; s < widget.data[i].subcategories.length; s++) {
-          if (widget.data[i].subcategories[s]['brands'].length > 0) {
-            print('mas que 0');
-            categories.add(widget.data[i]);
-          }
-        }
-      }
-    }
+    // for (var i = 0; i < widget.data.length; i++) {
+    //   if (widget.data[i].subcategories.length > 0) {
+    //     for (var s = 0; s < widget.data[i].subcategories.length; s++) {
+    //       if (widget.data[i].subcategories[s]['brands'].length > 0) {
+    //         categories.add(widget.data[i]);
+    //       }
+    //     }
+    //   }
+    // }
+    categories = widget.data;
     _categoriesTabController =
         TabController(length: categories.length, vsync: this);
   }

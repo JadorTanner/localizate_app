@@ -19,11 +19,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    for (var i = 0; i < widget.categories.length; i++) {
-      if (widget.categories[i].subcategories.length > 0) {
-        categorias.add(widget.categories[i]);
-      }
-    }
+    categorias = widget.categories;
   }
 
   @override

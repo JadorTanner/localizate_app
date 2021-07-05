@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:localizate/globals.dart' as globals;
+
+String url = globals.url;
 
 class LoginPage extends StatefulWidget {
   LoginPage(this.setLogin, {Key? key}) : super(key: key);
@@ -15,6 +19,18 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future login() async {
+    var response = await http.post(Uri.parse(url + 'login'), body: {
+      'email': _emailController.text,
+      'password': _passwordController.text
+    });
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      widget.setLogin();
+    }
   }
 
   @override
@@ -40,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                   onPressed: () => {}, child: Text('Olvidé mi contraseña')),
               TextButton(
-                onPressed: () => widget.setLogin(),
+                onPressed: () => login(),
                 child: Text(
                   'Iniciar sesión',
                   style: TextStyle(color: Colors.white),

@@ -150,7 +150,6 @@ class _CantidadContadorState extends State<CantidadContador> {
                     ? cantItems -= 1
                     // ignore: unnecessary_statements
                     : null;
-            print(cantItems);
           })
         },
         child: icon,
