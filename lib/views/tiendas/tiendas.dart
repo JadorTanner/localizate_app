@@ -19,43 +19,10 @@ class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    // for (var i = 0; i < widget.data.length; i++) {
-    //   if (widget.data[i].subcategories.length > 0) {
-    //     for (var s = 0; s < widget.data[i].subcategories.length; s++) {
-    //       if (widget.data[i].subcategories[s]['brands'].length > 0) {
-    //         categories.add(widget.data[i]);
-    //       }
-    //     }
-    //   }
-    // }
     categories = widget.data;
     _categoriesTabController =
         TabController(length: categories.length, vsync: this);
   }
-//filtrar por busqueda
-
-  // void filterSearchResults(String query) {
-  //   List dummySearchList = [];
-  //   dummySearchList.addAll(tiendas);
-  //   if (query.isNotEmpty) {
-  //     List dummyListData = [];
-  //     dummySearchList.forEach((item) {
-  //       if (item['name'].toLowerCase().contains(query.toLowerCase())) {
-  //         dummyListData.add(item);
-  //       }
-  //     });
-  //     setState(() {
-  //       listaTiendasDinamica.clear();
-  //       listaTiendasDinamica.addAll(dummyListData);
-  //     });
-  //     return;
-  //   } else {
-  //     setState(() {
-  //       listaTiendasDinamica.clear();
-  //       listaTiendasDinamica.addAll(tiendas);
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

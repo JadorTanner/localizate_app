@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
 
 String url = globals.url;
 
@@ -26,10 +27,11 @@ class _LoginPageState extends State<LoginPage> {
       'email': _emailController.text,
       'password': _passwordController.text
     });
-
-    print(response.statusCode);
     if (response.statusCode == 200) {
       widget.setLogin();
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.setString('user', response.body.toString());
     }
   }
 
