@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:localizate/globals.dart';
@@ -11,7 +12,10 @@ import 'package:http/http.dart' as http;
 import 'package:localizate/views/search.dart';
 import 'package:localizate/views/tiendas/tiendas.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'globals.dart' as globals;
 
+String url = globals.url;
 void main() => runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
     child: MaterialApp(
@@ -30,27 +34,41 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   List<ProductModel> productos = [];
-  final String _url = 'http://181.120.116.15:8000/api/';
 
   @override
   void initState() {
     super.initState();
+    context.read<CartProvider>().getCartData();
+    processPedido();
   }
 
   Future getCategories() async {
-    var response = await http.get(Uri.parse(_url + "categories"));
+    var response = await http.get(Uri.parse(url + "api/categories"));
     var jsonCategories;
     List<Category> categories;
     if (response.statusCode == 200) {
       jsonCategories = jsonDecode(response.body)['categories'];
       categories = List.generate(
           jsonCategories.length,
-          (index) => Category(jsonCategories[index]['name'],
+          (index) => Category(
+              jsonCategories[index]['name'],
+              jsonCategories[index]['image'],
               jsonCategories[index]['subcategories']));
     } else {
       categories = [];
     }
     return categories;
+  }
+
+  Future processPedido() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = await http.post(Uri.parse(url + 'cart/process'), body: {
+      'user': sharedPreferences.getString('user')
+    }, headers: {
+      HttpHeaders.authorizationHeader:
+          sharedPreferences.getString('token').toString(),
+    });
+    print(response.statusCode);
   }
 
   @override

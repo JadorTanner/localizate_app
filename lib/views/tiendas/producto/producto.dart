@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:localizate/models/productModel.dart';
@@ -7,6 +8,7 @@ import 'package:localizate/utils/capitalize.dart';
 import 'package:localizate/views/tiendas/producto_parts/checkbox.dart';
 import 'package:localizate/views/tiendas/producto_parts/dropdown.dart';
 import 'package:provider/provider.dart';
+import 'package:localizate/globals.dart' as globals;
 
 class ProductoDetails extends StatefulWidget {
   ProductoDetails(this.producto, {Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class _ProductoDetailsState extends State<ProductoDetails> {
   int contador = 1;
   bool isOnCart = false;
   var items;
+  List images = [];
   @override
   void initState() {
     super.initState();
@@ -30,6 +33,13 @@ class _ProductoDetailsState extends State<ProductoDetails> {
       getExtraFields(producto['special_fields']);
     } else {
       extraFields = [];
+    }
+    images.add(producto['image']);
+    if (producto['image_2'] != null) {
+      images.add(producto['image_2']);
+    }
+    if (producto['image_3'] != null) {
+      images.add(producto['image_3']);
     }
   }
 
@@ -118,28 +128,25 @@ class _ProductoDetailsState extends State<ProductoDetails> {
               width: MediaQuery.of(context).size.width,
               height: 400,
               child: CarouselSlider(
-                options: CarouselOptions(),
-                items: [
-                  Center(
-                      child: Icon(
-                    Icons.image,
-                    size: 50 * 4,
-                    color: Colors.white,
-                  )),
-                  Center(
-                      child: Icon(
-                    Icons.image_outlined,
-                    size: 50 * 4,
-                    color: Colors.white,
-                  )),
-                  Center(
-                      child: Icon(
-                    Icons.image,
-                    size: 50 * 4,
-                    color: Colors.white,
-                  )),
-                ],
-              )),
+                  options: CarouselOptions(),
+                  items: List.generate(
+                    images.length,
+                    (index) => Image.network(
+                      globals.imgUrl + images[index],
+                      frameBuilder: (BuildContext context, Widget child, frame,
+                          bool wasSynchronouslyLoaded) {
+                        if (wasSynchronouslyLoaded) {
+                          return child;
+                        }
+                        return AnimatedOpacity(
+                          child: child,
+                          opacity: frame == null ? 0 : 1,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                        );
+                      },
+                    ),
+                  ))),
           Expanded(
               child: Container(
                   padding: EdgeInsets.all(20),

@@ -16,7 +16,7 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   Future logout() async {
-    var response = await http.post(Uri.parse(url + 'logout'));
+    var response = await http.post(Uri.parse(url + 'api/logout'));
     if (response.statusCode == 200) {
       widget.logOut();
       SharedPreferences sharedPreferences =
@@ -25,9 +25,15 @@ class _AccountState extends State<Account> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    // logout();
+  }
+
   Future getUserData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var _user = jsonDecode(sharedPreferences.getString('user').toString());
+    var _user = sharedPreferences.getString('token');
     return _user;
   }
 
@@ -44,7 +50,8 @@ class _AccountState extends State<Account> {
               Center(
                 child: Column(
                   children: [
-                    Text(userData['full_name']),
+                    // Text(userData['full_name']),
+                    Text(userData),
                     ElevatedButton(
                         onPressed: () => logout(), child: Text("cerrar sesión"))
                   ],

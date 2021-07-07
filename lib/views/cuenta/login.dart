@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
@@ -23,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future login() async {
-    var response = await http.post(Uri.parse(url + 'login'), body: {
+    var response = await http.post(Uri.parse(url + 'api/login'), body: {
       'email': _emailController.text,
       'password': _passwordController.text
     });
@@ -31,7 +33,11 @@ class _LoginPageState extends State<LoginPage> {
       widget.setLogin();
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
-      sharedPreferences.setString('user', response.body.toString());
+      var jsonResponse = jsonDecode(response.body);
+      var user = jsonEncode(jsonResponse['user']);
+      print(jsonResponse['token']);
+      sharedPreferences.setString('user', user);
+      sharedPreferences.setString('token', jsonResponse['token']);
     }
   }
 

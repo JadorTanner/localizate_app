@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:localizate/models/CategoryModel.dart';
 import 'package:localizate/views/tiendas/subcategories.dart';
+import 'package:localizate/globals.dart' as globals;
+
+String imgUrl = globals.imgUrl;
 
 // ignore: must_be_immutable
 class Home extends StatefulWidget {
@@ -67,11 +70,12 @@ class CategoryCard extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.centerLeft,
                   children: [
-                    // Container(
-                    //     decoration: BoxDecoration(
-                    //         image: DecorationImage(
-                    //             fit: BoxFit.cover,
-                    //             image: AssetImage(categoria['img'])))),
+                    Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image:
+                                    NetworkImage(imgUrl + categoria.image)))),
                     // image: AssetImage(categoria['img']))),
                     CustomPaint(
                       child: Container(

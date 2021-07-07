@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
 import 'package:localizate/views/transitions/productPageRouter.dart';
 
+String imgUrl = globals.imgUrl;
+
 class Tienda extends StatefulWidget {
   Tienda(this.id, {Key? key}) : super(key: key);
 
@@ -18,7 +20,7 @@ class Tienda extends StatefulWidget {
 class _TiendaState extends State<Tienda> {
   Future brandDetails() async {
     var response = await http
-        .get(Uri.parse(globals.url + "brand/" + widget.id.toString()));
+        .get(Uri.parse(globals.url + "api/brand/" + widget.id.toString()));
     var jsonResponse = jsonDecode(response.body);
     return jsonResponse;
   }
@@ -44,22 +46,6 @@ class _TiendaState extends State<Tienda> {
                     return ProductoTienda(data['products'][prodIndex]);
                   }),
                 ))
-                // ...List.generate(
-                //     _productos.length,
-                //     (index) => GestureDetector(
-                //         onTap: () => Navigator.push(
-                //             context,
-                //             MaterialPageRoute(
-                //                 builder: (BuildContext context) =>
-                //                     ProductoDetails(_productos[index]))),
-                //         child: Card(
-                //             margin:
-                //                 EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                //             child: Padding(
-                //                 padding: EdgeInsets.all(20),
-                //                 child: Row(
-                //                   children: [Text(_productos[index]['name'])],
-                //                 )))))
               ]);
             default:
               return Text('done');
@@ -67,60 +53,6 @@ class _TiendaState extends State<Tienda> {
         },
       ),
     );
-    // return Scaffold(
-    //     floatingActionButton: IconButton(
-    //         onPressed: () => Navigator.pop(context),
-    //         icon: Icon(
-    //           Icons.arrow_back,
-    //           color: Colors.white,
-    //         )),
-    //     floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
-    //     body: Column(children: [
-    //       Stack(
-    //           alignment: Alignment.center,
-    //           clipBehavior: Clip.none,
-    //           children: [
-    //             // Container(
-    //             //     height: 250,
-    //             //     padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-    //             //     decoration: BoxDecoration(
-    //             //         image: DecorationImage(
-    //             //             image: AssetImage(widget.img), fit: BoxFit.cover))),
-    //             Positioned(
-    //                 width: MediaQuery.of(context).size.width * 0.9,
-    //                 bottom: -80,
-    //                 child: Card(
-    //                     child: Padding(
-    //                         padding: EdgeInsets.all(20),
-    //                         child:
-    //                             Stack(alignment: Alignment.center, children: [
-    //                           Column(children: [
-    //                             // Image.asset(
-    //                             //   widget.tienda['img'],
-    //                             //   fit: BoxFit.scaleDown,
-    //                             //   height: 100,
-    //                             // ),
-    //                             SizedBox(
-    //                               height: 10,
-    //                             ),
-    //                             Text(widget.tienda['name']),
-    //                           ])
-    //                         ]))))
-    //           ]),
-    //       SizedBox(height: 100),
-    //       //contenedor de los productos de la tienda
-    //       Expanded(
-    //           child: Container(
-    //               padding: EdgeInsets.only(top: 10),
-    //               decoration: BoxDecoration(
-    //                   color: Theme.of(context).primaryColor,
-    //                   borderRadius:
-    //                       BorderRadius.vertical(top: Radius.circular(20))),
-    //               child: ListView(
-    //                 children: List.generate(_productos.length,
-    //                     (index) => ProductoTienda(_productos[index], index)),
-    //               )))
-    //     ]));
   }
 }
 
@@ -128,7 +60,6 @@ class _TiendaState extends State<Tienda> {
 class ProductoTienda extends StatelessWidget {
   ProductoTienda(this._producto, {Key? key}) : super(key: key);
   final _producto;
-  late String imgUrl = globals.imgUrl;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -149,15 +80,24 @@ class ProductoTienda extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // Image.network(
-                            //   imgUrl +
-                            //       (_producto['image'] != null
-                            //           ? _producto['image']
-                            //           : "placeholder.png"),
-                            //   height: 90,
-                            //   width: 90,
-                            //   fit: BoxFit.cover,
-                            // ),
+                            Image.network(
+                              imgUrl + _producto['image'],
+                              frameBuilder: (BuildContext context, Widget child,
+                                  int? frame, bool wasSynchronouslyLoaded) {
+                                if (wasSynchronouslyLoaded) {
+                                  return child;
+                                }
+                                return AnimatedOpacity(
+                                  child: child,
+                                  opacity: frame == null ? 0 : 1,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeOut,
+                                );
+                              },
+                              height: 90,
+                              width: 90,
+                              fit: BoxFit.cover,
+                            ),
                             SizedBox(width: 20),
                             Expanded(
                               child: Column(
