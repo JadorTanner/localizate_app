@@ -44,14 +44,13 @@ class CartProvider with ChangeNotifier {
     var product = item;
     int parsedPrice = int.parse(product['price'].replaceAll(".", ""));
     int totalPoduct = parsedPrice * cantidad;
+    this._total += this.total + totalPoduct;
     product['cantidad'] = cantidad.toString();
     product['productTotal'] = totalPoduct.toString();
-    _total += totalPoduct;
-    _items.add(product);
+    this._items.add(product);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
     sharedPreferences.setString('cartItems', jsonEncode(_items));
-    sharedPreferences.setString('cartTotal', _total.toString());
+    sharedPreferences.setInt('cartTotal', _total);
 
     notifyListeners();
   }
@@ -60,12 +59,12 @@ class CartProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     //obtiene los productos guardados en el dispositivo
-    _items = sharedPreferences.getString('cartItems') != null
+    this._items = sharedPreferences.getString('cartItems') != null
         ? jsonDecode(sharedPreferences.getString('cartItems').toString())
         : [];
 
     //obtiene el total del carrito guardado en el dispositivo
-    _total = sharedPreferences.getString('cartTotal') != null
+    this._total = sharedPreferences.getString('cartTotal') != null
         ? int.parse(sharedPreferences.getInt('cartTotal').toString())
         : 0;
   }

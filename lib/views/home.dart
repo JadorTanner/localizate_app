@@ -32,9 +32,24 @@ class _HomeState extends State<Home> {
         'assets/img/banners/bg-principal.png',
       ),
       SizedBox(height: 10),
-      ...List.generate(
-          categorias.length, (index) => CategoryCard(categorias[index], index))
+      categorias.length > 0
+          ? Categories(categorias)
+          : Center(
+              child: Text('Por favor verifique su conexión a internet'),
+            )
     ]);
+  }
+}
+
+class Categories extends StatelessWidget {
+  const Categories(this.categorias, {Key? key}) : super(key: key);
+  final List categorias;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+          categorias.length, (index) => CategoryCard(categorias[index], index)),
+    );
   }
 }
 

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:localizate/views/tiendas/producto/producto.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
-import 'package:localizate/views/transitions/productPageRouter.dart';
 
 String imgUrl = globals.imgUrl;
 
@@ -20,7 +19,7 @@ class Tienda extends StatefulWidget {
 class _TiendaState extends State<Tienda> {
   Future brandDetails() async {
     var response = await http
-        .get(Uri.parse(globals.url + "api/brand/" + widget.id.toString()));
+        .get(Uri.parse(globals.apiUrl + "brand/" + widget.id.toString()));
     var jsonResponse = jsonDecode(response.body);
     return jsonResponse;
   }

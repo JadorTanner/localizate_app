@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/models/CategoryModel.dart';
 import 'package:localizate/views/tiendas/tienda-single.dart';
+import 'package:localizate/globals.dart' as globals;
+
+String imgUrl = globals.imgUrl;
 
 // ignore: must_be_immutable
 class Tiendas extends StatefulWidget {
@@ -33,6 +36,7 @@ class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
             isScrollable: true,
             tabs: List.generate(categories.length, (index) {
               return Container(
+                  height: 200,
                   padding: EdgeInsets.all(10),
                   child: Text(categories[index].name));
             })),
@@ -99,7 +103,8 @@ class _SubcategoryTabViewState extends State<SubcategoryTabView>
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Tienda(
-                                                  brands[brandIndex]['id'])))
+                                                    brands[brandIndex]['id'],
+                                                  )))
                                     },
                                 child: Card(
                                   margin: EdgeInsets.symmetric(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/views/tiendas/tienda-single.dart';
 
+// ignore: must_be_immutable
 class Search extends StatefulWidget {
   Search(this.categorias, {Key? key}) : super(key: key);
   List categorias;
@@ -80,7 +81,6 @@ class _SearchState extends State<Search> {
           initialData: "",
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             listaBrandsDinamica = snapshot.data;
-            print(listaBrandsDinamica);
             return Container(
                 child: Column(
               children: <Widget>[

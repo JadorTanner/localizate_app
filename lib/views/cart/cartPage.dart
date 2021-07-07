@@ -4,6 +4,8 @@ import 'package:localizate/views/tiendas/producto/producto.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
+var formatter = NumberFormat('#,##0 Gs.', 'es_ES');
+
 class CartPage extends StatefulWidget {
   CartPage({Key? key}) : super(key: key);
 
@@ -12,6 +14,11 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,8 +36,8 @@ class Items extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = NumberFormat('#,##0 Gs.', 'es_ES');
     var items = context.watch<CartProvider>().items;
+    var cartTotal = context.watch<CartProvider>().total;
     return ListView(children: [
       ...List.generate(
           items.length,
@@ -49,13 +56,16 @@ class Items extends StatelessWidget {
                           Column(
                             children: [
                               Text(items[index]['name']),
-                              Text('P. Unitario: ${items[index]['price']}'),
+                              Text(
+                                  'P. Unitario: ${formatter.format(int.parse(items[index]['price']))}'),
                             ],
                           ),
                           Column(
                             children: [
-                              Text('Total: ${items[index]['productTotal']}'),
-                              Text('Cantidad: ${items[index]['cantidad']}'),
+                              Text(
+                                  'Total: ${formatter.format(int.parse(items[index]['productTotal']))}'),
+                              Text(
+                                  'Cantidad: ${formatter.format(int.parse(items[index]['cantidad']))}'),
                             ],
                           ),
                           SizedBox(
@@ -68,6 +78,8 @@ class Items extends StatelessWidget {
                               icon: Icon(Icons.delete))
                         ],
                       ))))),
+      Text(
+          'Total en carrito: ${formatter.format(int.parse(cartTotal.toString()))}'),
       ElevatedButton(onPressed: () => {}, child: Text('Realizar pedido'))
     ]);
   }

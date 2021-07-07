@@ -5,8 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 
-String url = globals.url;
+String url = globals.apiUrl;
 
+// ignore: must_be_immutable
 class LoginPage extends StatefulWidget {
   LoginPage(this.setLogin, {Key? key}) : super(key: key);
   var setLogin;
@@ -25,19 +26,28 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future login() async {
-    var response = await http.post(Uri.parse(url + 'api/login'), body: {
+    var response = await http.post(Uri.parse(url + 'login'), body: {
       'email': _emailController.text,
       'password': _passwordController.text
     });
     if (response.statusCode == 200) {
-      widget.setLogin();
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
       var jsonResponse = jsonDecode(response.body);
-      var user = jsonEncode(jsonResponse['user']);
-      print(jsonResponse['token']);
-      sharedPreferences.setString('user', user);
-      sharedPreferences.setString('token', jsonResponse['token']);
+      if (jsonResponse['success']) {
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        var user = jsonEncode(jsonResponse['user']);
+        sharedPreferences.setString('user', user);
+        sharedPreferences.setString(
+            'orders', jsonEncode(jsonResponse['pedidos']));
+        sharedPreferences.setString(
+            'token', jsonEncode(jsonResponse['token']['accessToken']));
+        widget.setLogin();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Ha ocurrido un error'),
+          duration: Duration(seconds: 2),
+        ));
+      }
     }
   }
 
@@ -64,15 +74,17 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                   onPressed: () => {}, child: Text('Olvidé mi contraseña')),
               TextButton(
-                onPressed: () => login(),
-                child: Text(
-                  'Iniciar sesión',
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateColor.resolveWith(
-                        (states) => Theme.of(context).primaryColor)),
-              )
+                  onPressed: () => {login()},
+                  child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      child: Text(
+                        'Iniciar sesión',
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Theme.of(context).primaryColor)))
             ],
           )
         ]));

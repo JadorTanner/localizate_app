@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as globals;
 
-String url = globals.url;
+String url = globals.apiUrl;
 void main() => runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
     child: MaterialApp(
@@ -39,11 +39,10 @@ class _MainState extends State<Main> {
   void initState() {
     super.initState();
     context.read<CartProvider>().getCartData();
-    processPedido();
   }
 
   Future getCategories() async {
-    var response = await http.get(Uri.parse(url + "api/categories"));
+    var response = await http.get(Uri.parse(url + "categories"));
     var jsonCategories;
     List<Category> categories;
     if (response.statusCode == 200) {
@@ -68,7 +67,6 @@ class _MainState extends State<Main> {
       HttpHeaders.authorizationHeader:
           sharedPreferences.getString('token').toString(),
     });
-    print(response.statusCode);
   }
 
   @override
@@ -111,10 +109,10 @@ class _MainState extends State<Main> {
                               s < data[i].subcategories.length;
                               s++) {
                             if (data[i].subcategories[s]['brands'].length > 0) {
-                              categorias.add(data[i]);
                               if (categorias.length >= 4) {
                                 break;
                               }
+                              categorias.add(data[i]);
                             }
                           }
                         }
