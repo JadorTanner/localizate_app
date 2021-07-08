@@ -19,6 +19,7 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   Future logout() async {
     var response = await http.post(Uri.parse(url + 'logout'));
+    print(response.statusCode);
     if (response.statusCode == 200) {
       widget.logOut();
       SharedPreferences sharedPreferences =
@@ -29,10 +30,13 @@ class _AccountState extends State<Account> {
     }
   }
 
+  var _userData;
+
   @override
   void initState() {
     super.initState();
     // logout();
+    getUserData();
     getOrders();
   }
 
@@ -40,8 +44,10 @@ class _AccountState extends State<Account> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     Map _user = {};
     _user['user'] = sharedPreferences.getString('user');
-    _user['pedidos'] = await getOrders();
-    return _user;
+    print(_user['user']);
+    _userData = jsonDecode(_user['user'].toString());
+    // _user['pedidos'] = await getOrders();
+    // return _user;
   }
 
   Future getOrders() async {
@@ -64,30 +70,23 @@ class _AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getUserData(),
-      initialData: "",
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        var userData = jsonDecode(snapshot.data['user']);
-        var pedidos = snapshot.data['pedidos'];
-        return Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(children: [
-              Center(
-                child: Column(
-                  children: [
-                    Text(userData['full_name']),
-                    ...List.generate(
-                        pedidos.length,
-                        (index) => Text(
-                            "${pedidos[index]['invoice_number']}) ${pedidos[index]['status']}")),
-                    ElevatedButton(
-                        onPressed: () => logout(), child: Text("cerrar sesión"))
-                  ],
-                ),
-              ),
-            ]));
-      },
-    );
+    print(_userData);
+    return Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(children: [
+          Center(
+            child: Column(
+              children: [
+                // Text(_userData['full_name']),
+                // ...List.generate(
+                //     pedidos.length,
+                //     (index) => Text(
+                //         "${pedidos[index]['invoice_number']}) ${pedidos[index]['status']}")),
+                ElevatedButton(
+                    onPressed: () => logout(), child: Text("cerrar sesión"))
+              ],
+            ),
+          ),
+        ]));
   }
 }

@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
+import 'package:localizate/models/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 String url = globals.apiUrl;
 
@@ -20,9 +22,12 @@ TextEditingController _emailController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
 
 class _LoginPageState extends State<LoginPage> {
+  var userModel;
+
   @override
   void initState() {
     super.initState();
+    userModel = context.read<UserModel>();
   }
 
   Future login() async {
@@ -74,7 +79,11 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                   onPressed: () => {}, child: Text('Olvidé mi contraseña')),
               TextButton(
-                  onPressed: () => {login()},
+                  onPressed: () => {
+                        userModel.login(_emailController.text,
+                            _passwordController.text, context)
+                        // login()
+                      },
                   child: Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20),

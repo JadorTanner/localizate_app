@@ -36,7 +36,6 @@ class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
             isScrollable: true,
             tabs: List.generate(categories.length, (index) {
               return Container(
-                  height: 200,
                   padding: EdgeInsets.all(10),
                   child: Text(categories[index].name));
             })),

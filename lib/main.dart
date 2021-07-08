@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:localizate/globals.dart';
 import 'package:localizate/models/CategoryModel.dart';
+import 'package:localizate/models/UserModel.dart';
 import 'package:localizate/models/productModel.dart';
 import 'package:localizate/views/cart/cartPage.dart';
 import 'package:localizate/views/cuenta/cuenta_page.dart';
@@ -17,13 +18,16 @@ import 'globals.dart' as globals;
 
 String url = globals.apiUrl;
 void main() => runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primaryColor: Color(0xFFFF830F), accentColor: Color(0xFFD87920)),
-      home: Main(),
-    )));
+        providers: [
+          ChangeNotifierProvider(create: (_) => CartProvider()),
+          ChangeNotifierProvider(create: (_) => UserModel())
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              primaryColor: Color(0xFFFF830F), accentColor: Color(0xFFD87920)),
+          home: Main(),
+        )));
 
 class Main extends StatefulWidget {
   Main({Key? key}) : super(key: key);
@@ -39,6 +43,7 @@ class _MainState extends State<Main> {
   void initState() {
     super.initState();
     context.read<CartProvider>().getCartData();
+    context.read<UserModel>().setUserData();
   }
 
   Future getCategories() async {
