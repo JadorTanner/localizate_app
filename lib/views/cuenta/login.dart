@@ -30,24 +30,24 @@ class _LoginPageState extends State<LoginPage> {
       'email': _emailController.text,
       'password': _passwordController.text
     });
-    if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body);
-      if (jsonResponse['success']) {
-        SharedPreferences sharedPreferences =
-            await SharedPreferences.getInstance();
-        var user = jsonEncode(jsonResponse['user']);
-        sharedPreferences.setString('user', user);
-        sharedPreferences.setString(
-            'orders', jsonEncode(jsonResponse['pedidos']));
-        sharedPreferences.setString(
-            'token', jsonEncode(jsonResponse['token']['accessToken']));
-        widget.setLogin();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Ha ocurrido un error'),
-          duration: Duration(seconds: 2),
-        ));
-      }
+
+    var jsonResponse = jsonDecode(response.body);
+    print(jsonResponse);
+    if (jsonResponse['success']) {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      var user = jsonEncode(jsonResponse['user']);
+      sharedPreferences.setString('user', user);
+      sharedPreferences.setString(
+          'orders', jsonEncode(jsonResponse['pedidos']));
+      sharedPreferences.setString(
+          'token', jsonEncode(jsonResponse['token']['accessToken']));
+      widget.setLogin();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Ha ocurrido un error'),
+        duration: Duration(seconds: 2),
+      ));
     }
   }
 

@@ -1,10 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:localizate/models/productModel.dart';
 import 'package:localizate/views/tiendas/producto/producto.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:localizate/globals.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 var formatter = NumberFormat('#,##0 Gs.', 'es_ES');
+String apiUrl = globals.apiUrl;
 
 class CartPage extends StatefulWidget {
   CartPage({Key? key}) : super(key: key);
@@ -31,13 +38,61 @@ class _CartPageState extends State<CartPage> {
   }
 }
 
-class Items extends StatelessWidget {
-  const Items({Key? key}) : super(key: key);
+class Items extends StatefulWidget {
+  Items({Key? key}) : super(key: key);
+
+  @override
+  _ItemsState createState() => _ItemsState();
+}
+
+class _ItemsState extends State<Items> {
+  var items;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var items = context.watch<CartProvider>().items;
+    var cart = context.watch<CartProvider>();
+    items = cart.items;
     var cartTotal = context.watch<CartProvider>().total;
+    Future processPedido() async {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      var processUrl = Uri.parse(apiUrl + "process-cart");
+      var token = "Bearer " +
+          sharedPreferences.getString('token').toString().replaceAll('"', '');
+      var body = {
+        "cart": jsonEncode(
+            {"delivery_type": 1, "payment_type": "cash", "products": items})
+      };
+      var response = await http.post(processUrl, body: body, headers: {
+        HttpHeaders.authorizationHeader: token,
+      });
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['success']) {
+          cart.deleteItems();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text('Su pedido se ha procesado, está en estado pendiente'),
+            duration: Duration(seconds: 2),
+          ));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Ha ocurrido un error'),
+            duration: Duration(seconds: 2),
+          ));
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Ha ocurrido un error'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    }
+
     return ListView(children: [
       ...List.generate(
           items.length,
@@ -80,7 +135,8 @@ class Items extends StatelessWidget {
                       ))))),
       Text(
           'Total en carrito: ${formatter.format(int.parse(cartTotal.toString()))}'),
-      ElevatedButton(onPressed: () => {}, child: Text('Realizar pedido'))
+      ElevatedButton(
+          onPressed: () => {processPedido()}, child: Text('Realizar pedido'))
     ]);
   }
 }
