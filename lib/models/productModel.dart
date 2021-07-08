@@ -55,6 +55,13 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  deleteItems() {
+    _items = [];
+    _total = 0;
+
+    notifyListeners();
+  }
+
   getCartData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 

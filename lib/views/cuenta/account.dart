@@ -18,12 +18,13 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   Future logout() async {
-    var response = await http.post(Uri.parse(url + 'logout'));
-    print(response.statusCode);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url + 'logout'), headers: {
+      HttpHeaders.authorizationHeader: "Bearer " +
+          sharedPreferences.getString('token').toString().replaceAll('"', '')
+    });
     if (response.statusCode == 200) {
       widget.logOut();
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
       sharedPreferences.remove('user');
       sharedPreferences.remove('token');
       sharedPreferences.remove('pedidos');
@@ -52,7 +53,8 @@ class _AccountState extends State<Account> {
 
   Future getOrders() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var token = sharedPreferences.getString('token').toString();
+    var token =
+        sharedPreferences.getString('token').toString().replaceAll('"', '');
     var response = await http.post(Uri.parse(url + "user/orders"),
         headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     var pedidos = [];
