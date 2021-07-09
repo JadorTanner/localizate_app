@@ -2167,6 +2167,7 @@ var shop = {
 };
 
 List categories = [
+  //categoria comida
   {
     "id": 1,
     "name": "Comida",
