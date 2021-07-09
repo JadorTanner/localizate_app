@@ -7,7 +7,7 @@ import 'package:localizate/views/tiendas/tienda-single.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
 
-String url = globals.apiUrl;
+String url = "http://181.120.66.16:8001/api/flutter/";
 
 // ignore: must_be_immutable
 class Search extends StatefulWidget {

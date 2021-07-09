@@ -10,10 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:localizate/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
 
 var formatter = NumberFormat('#,##0 Gs.', 'es_ES');
-String apiUrl = globals.apiUrl;
+String apiUrl = "http://181.120.66.16:8001/api/flutter/";
 
 class CartPage extends StatefulWidget {
   CartPage({Key? key}) : super(key: key);

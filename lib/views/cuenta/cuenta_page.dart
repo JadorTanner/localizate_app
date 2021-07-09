@@ -26,65 +26,68 @@ class _AccountPageState extends State<AccountPage>
   @override
   Widget build(BuildContext context) {
     var userModel = context.watch<UserModel>();
+    // userModel.logout();
     isLogged = userModel.isLogged;
     userModel.getOrders();
     List orders = userModel.orders;
     return isLogged
         ? Column(
             children: [
-              Container(
-                  padding: EdgeInsets.only(top: 40, bottom: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(userModel.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline4!
-                              .copyWith(color: Colors.black)),
-                      Text(userModel.email,
-                          style: Theme.of(context).textTheme.headline6),
-                      IconButton(
-                          icon: Icon(Icons.logout),
-                          onPressed: () => userModel.logout())
-                    ],
-                  )),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: TabBar(
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.black45,
-                    labelPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    controller: _tabController,
-                    tabs: pages),
-              ),
-              Expanded(
-                  child: TabBarView(controller: _tabController, children: [
-                ListView(
-                  children: List.generate(
-                      orders.length,
-                      (index) => OrderCard(
-                          orders[index]['id'].toString(),
-                          orders[index]['invoice_number'].toString(),
-                          orders[index]['created_at'].toString(),
-                          orders[index]['status'],
-                          formatter
-                              .format(int.parse(
-                                  double.parse(orders[index]['total'])
-                                      .toString()))
-                              .toString()
-                              .toString(),
-                          orders[index]['delivery_type'],
-                          orders[index]['payment_type'])),
-                ),
-                ListView(
-                  children: [Center(child: Text('Direcciones'))],
-                ),
-                ListView(
-                  children: [Center(child: Text('Facturas'))],
-                )
-              ]))
+              IconButton(
+                  icon: Icon(Icons.logout), onPressed: () => userModel.logout())
+              // Container(
+              //     padding: EdgeInsets.only(top: 40, bottom: 20),
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         Text(userModel.name,
+              //             style: Theme.of(context)
+              //                 .textTheme
+              //                 .headline4!
+              //                 .copyWith(color: Colors.black)),
+              //         Text(userModel.email,
+              //             style: Theme.of(context).textTheme.headline6),
+              //         IconButton(
+              //             icon: Icon(Icons.logout),
+              //             onPressed: () => userModel.logout())
+              //       ],
+              //     )),
+              // Container(
+              //   width: MediaQuery.of(context).size.width * 0.8,
+              //   child: TabBar(
+              //       labelColor: Colors.black,
+              //       unselectedLabelColor: Colors.black45,
+              //       labelPadding:
+              //           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              //       controller: _tabController,
+              //       tabs: pages),
+              // ),
+              // Expanded(
+              //     child: TabBarView(controller: _tabController, children: [
+              //   ListView(
+              //     children: List.generate(
+              //         orders.length,
+              //         (index) => OrderCard(
+              //             orders[index]['id'].toString(),
+              //             orders[index]['invoice_number'].toString(),
+              //             orders[index]['created_at'].toString(),
+              //             orders[index]['status'],
+              //             formatter
+              //                 .format(int.parse(
+              //                     double.parse(orders[index]['total'])
+              //                         .toString()))
+              //                 .toString()
+              //                 .toString(),
+              //             orders[index]['delivery_type'],
+              //             orders[index]['payment_type'])),
+              //   ),
+              //   ListView(
+              //     children: [Center(child: Text('Direcciones'))],
+              //   ),
+              //   ListView(
+              //     children: [Center(child: Text('Facturas'))],
+              //   )
+              // ]))
             ],
           )
         : LoginPage();

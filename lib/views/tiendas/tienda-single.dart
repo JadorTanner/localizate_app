@@ -18,8 +18,10 @@ class Tienda extends StatefulWidget {
 
 class _TiendaState extends State<Tienda> {
   Future brandDetails() async {
-    var response = await http
-        .get(Uri.parse(globals.apiUrl + "brand/" + widget.id.toString()));
+    var response = await http.get(Uri.parse(
+        "http://181.120.66.16:8001/api/flutter/" +
+            "brand/" +
+            widget.id.toString()));
     var jsonResponse = jsonDecode(response.body);
     return jsonResponse;
   }

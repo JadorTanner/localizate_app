@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 
-String url = globals.apiUrl;
+String url = "http://181.120.66.16:8001/api/flutter/";
 
 class UserModel with ChangeNotifier {
   String _name = "";
@@ -21,6 +21,9 @@ class UserModel with ChangeNotifier {
 
   List _orders = [];
   List get orders => _orders;
+
+  List _addresses = [];
+  List get addresses => _addresses;
 
   //iniciar sesión
   login(email, password, context) async {
@@ -42,6 +45,7 @@ class UserModel with ChangeNotifier {
         _email = jsonResponse['user']['email'];
         _isLogged = true;
         _orders = [];
+        _addresses = await getAddresses();
         var jsonOrders = await getOrders();
         for (var i = 0; i < jsonOrders.length; i++) {
           _orders.add(jsonOrders[i]);
@@ -84,10 +88,19 @@ class UserModel with ChangeNotifier {
       _isLogged = true;
       _name = jsonUser['full_name'];
       _email = jsonUser['email'];
+
+      //ordenes
       var jsonOrders = await getOrders();
       _orders = [];
       for (var i = 0; i < jsonOrders.length; i++) {
         _orders.add(jsonOrders[i]);
+      }
+
+      //direcciones
+      var jsonAddresses = await getAddresses();
+      _addresses = [];
+      for (var i = 0; i < jsonAddresses.length; i++) {
+        _addresses.add(jsonAddresses[i]);
       }
       notifyListeners();
     }
@@ -121,5 +134,64 @@ class UserModel with ChangeNotifier {
       userOrders = [];
     }
     return userOrders;
+  }
+
+  setAddresses() async {
+    var jsonAddresses = await getAddresses()();
+    _addresses = [];
+    for (var i = 0; i < jsonAddresses.length; i++) {
+      _addresses.add(jsonAddresses[i]);
+    }
+    notifyListeners();
+  }
+
+  getAddresses() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url + 'addresses'), headers: {
+      HttpHeaders.authorizationHeader: "Bearer " +
+          sharedPreferences.getString('token').toString().replaceAll('"', '')
+    });
+    var jsonAddreses = [];
+    if (response.statusCode == 200) {
+      jsonAddreses = jsonDecode(response.body);
+      _addresses = jsonAddreses;
+      notifyListeners();
+    }
+    return jsonAddreses;
+  }
+
+  addAddress(name, principal, secundaria, referencia, numero, latitud, longitud,
+      context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = await http.post(
+        Uri.parse('http://181.120.66.16:8001/api/flutter/addresses/add'),
+        body: {
+          'name': name,
+          'street1': principal,
+          'street2': secundaria,
+          'reference': referencia,
+          'latitude': latitud,
+          'longitude': longitud,
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer " +
+              sharedPreferences
+                  .getString('token')
+                  .toString()
+                  .replaceAll('"', '')
+        });
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Se ha agregado correctamente'),
+        duration: Duration(seconds: 2),
+      ));
+      _addresses = jsonDecode(response.body);
+      notifyListeners();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Ha ocurrido un error'),
+        duration: Duration(seconds: 2),
+      ));
+    }
   }
 }

@@ -6,7 +6,7 @@ import 'package:localizate/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-String url = globals.apiUrl;
+String url = "http://181.120.66.16:8001/api/flutter/";
 
 // ignore: must_be_immutable
 class Account extends StatefulWidget {

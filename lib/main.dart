@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:localizate/globals.dart';
 import 'package:localizate/models/CategoryModel.dart';
@@ -14,10 +12,18 @@ import 'package:http/http.dart' as http;
 import 'package:localizate/views/search.dart';
 import 'package:localizate/views/tiendas/tiendas.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as globals;
+// import 'package:location_permissions/location_permissions.dart';
 
-String url = globals.apiUrl;
+String url = "http://181.120.66.16:8001/api/flutter/";
+
+// Future askPermissions() async {
+//   print('pidiendo permisos');
+//   PermissionStatus permission =
+//       await LocationPermissions().requestPermissions();
+//   print(permission);
+// }
+
 void main() => runApp(MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => CartProvider()),
@@ -63,16 +69,6 @@ class _MainState extends State<Main> {
       categories = [];
     }
     return categories;
-  }
-
-  Future processPedido() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var response = await http.post(Uri.parse(url + 'cart/process'), body: {
-      'user': sharedPreferences.getString('user')
-    }, headers: {
-      HttpHeaders.authorizationHeader:
-          sharedPreferences.getString('token').toString(),
-    });
   }
 
   @override
@@ -128,7 +124,7 @@ class _MainState extends State<Main> {
                     }
                     return PageView(
                       controller: _pageController,
-                      onPageChanged: (int) {},
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         Home(categorias),
                         AccountPage(),
@@ -207,5 +203,8 @@ IconButton bottomAppbarButton(_pageController, IconData icon, int toPage) {
         icon,
         color: Colors.white,
       ),
-      onPressed: () => {_pageController.jumpToPage(toPage)});
+      onPressed: () => {
+            _pageController.jumpToPage(toPage),
+            // if (toPage == 4) {askPermissions()}
+          });
 }
