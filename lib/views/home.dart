@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:localizate/models/products.dart';
+import 'package:localizate/models/CategoryModel.dart';
 import 'package:localizate/views/tiendas/subcategories.dart';
 import 'package:localizate/globals.dart' as globals;
 
+String imgUrl = globals.imgUrl;
+
 // ignore: must_be_immutable
 class Home extends StatefulWidget {
-  Home(this.products, {Key? key}) : super(key: key);
-  List<Product> products;
+  Home(this.categories, {Key? key}) : super(key: key);
+  List<Category> categories;
 
   @override
   _HomeState createState() => _HomeState();
@@ -15,18 +17,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List categorias = [];
-  late var shopCategorias;
-  List<Widget> categoriasWidgets = [];
   ScrollController _scrollController = ScrollController();
-  var shop = globals.shop;
 
   @override
   void initState() {
     super.initState();
-    shopCategorias = shop['categories'];
-    for (var i = 0; i < 2; i++) {
-      categorias.add(shopCategorias[i]);
-    }
+    categorias = widget.categories;
   }
 
   @override
@@ -36,16 +32,31 @@ class _HomeState extends State<Home> {
         'assets/img/banners/bg-principal.png',
       ),
       SizedBox(height: 10),
-      ...List.generate(
-          categorias.length, (index) => CategoryCard(categorias[index], index))
+      categorias.length > 0
+          ? Categories(categorias)
+          : Center(
+              child: Text('Por favor verifique su conexión a internet'),
+            )
     ]);
+  }
+}
+
+class Categories extends StatelessWidget {
+  const Categories(this.categorias, {Key? key}) : super(key: key);
+  final List categorias;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+          categorias.length, (index) => CategoryCard(categorias[index], index)),
+    );
   }
 }
 
 // tarjeta de categoria
 class CategoryCard extends StatelessWidget {
   const CategoryCard(this.categoria, this.index, {Key? key}) : super(key: key);
-  final Map categoria;
+  final Category categoria;
   final int index;
   @override
   Widget build(BuildContext context) {
@@ -66,7 +77,7 @@ class CategoryCard extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => SubcategoriesView(
-                              categoria['subcategories'], categoria)))
+                              categoria.subcategories, categoria)))
                 },
             child: Card(
                 clipBehavior: Clip.hardEdge,
@@ -74,11 +85,12 @@ class CategoryCard extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.centerLeft,
                   children: [
-                    // Container(
-                    //     decoration: BoxDecoration(
-                    //         image: DecorationImage(
-                    //             fit: BoxFit.cover,
-                    //             image: AssetImage(categoria['img'])))),
+                    Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image:
+                                    NetworkImage(imgUrl + categoria.image)))),
                     // image: AssetImage(categoria['img']))),
                     CustomPaint(
                       child: Container(
@@ -86,7 +98,7 @@ class CategoryCard extends StatelessWidget {
                           alignment: indexPar == 0
                               ? Alignment.bottomLeft
                               : Alignment.bottomRight,
-                          child: Text(categoria['name'],
+                          child: Text(categoria.name,
                               style: estilosTextoCategorias)),
                       size: Size(
                           100,

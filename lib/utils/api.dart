@@ -1,41 +1,28 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:localizate/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
-  final String _url = 'http://192.168.0.9:8001/';
-  //if you are using android studio emulator, change localhost to 10.0.2.2
-  var token;
-
-  // _getToken() async {
-  //   SharedPreferences localStorage = await SharedPreferences.getInstance();
-  //   token = jsonDecode(localStorage.getString('token').toString());
-  // }
-
-  _setToken(token) async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    token = localStorage.setString('token', token);
+  final String _url = globals.apiUrl;
+  getCategories() async {
+    var response = await http.get(Uri.parse(_url + "categories"));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
   }
 
-  authData(data, apiUrl) async {
-    var fullUrl = _url + apiUrl;
-    return await http.post(Uri.parse(fullUrl),
-        body: jsonEncode(data), headers: _setHeaders());
+  authPostRequest(url, body) async {
+    var response = await http.post(url, body: body, headers: _setHeaders());
+    return response;
   }
 
-  login(data, apiUri) async {
-    var fullUrl = _url + apiUri;
-    var resp = await http.post(Uri.parse(fullUrl),
-        body: jsonEncode(data), headers: _setHeaders());
-    var jsonBody = jsonDecode(resp.body);
-    _setToken(jsonBody['token']);
-    return jsonBody['token'];
+  _setHeaders() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return {
+      HttpHeaders.authorizationHeader:
+          sharedPreferences.getString('token').toString(),
+    };
   }
-
-  _setHeaders() => {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
 }

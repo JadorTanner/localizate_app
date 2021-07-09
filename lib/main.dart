@@ -1,19 +1,34 @@
-import 'package:flutter/material.dart';
-import 'package:localizate/models/products.dart';
-import 'package:localizate/views/cuenta/account.dart';
-import 'package:localizate/views/cuenta/login.dart';
-import 'package:localizate/views/home.dart';
-import 'package:localizate/views/search.dart';
-import 'package:localizate/globals.dart' as globals;
-import 'package:localizate/views/tiendas/tiendas.dart';
+import 'dart:convert';
+import 'dart:io';
 
-void main() => runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primaryColor: Color(0xFFFF830F), accentColor: Color(0xFFD87920)),
-      home: Main(),
-      debugShowMaterialGrid: false,
-    ));
+import 'package:flutter/material.dart';
+import 'package:localizate/globals.dart';
+import 'package:localizate/models/CategoryModel.dart';
+import 'package:localizate/models/UserModel.dart';
+import 'package:localizate/models/productModel.dart';
+import 'package:localizate/views/cart/cartPage.dart';
+import 'package:localizate/views/cuenta/cuenta_page.dart';
+import 'package:localizate/views/googleMaps.dart';
+import 'package:localizate/views/home.dart';
+import 'package:http/http.dart' as http;
+import 'package:localizate/views/search.dart';
+import 'package:localizate/views/tiendas/tiendas.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'globals.dart' as globals;
+
+String url = globals.apiUrl;
+void main() => runApp(MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => CartProvider()),
+          ChangeNotifierProvider(create: (_) => UserModel())
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              primaryColor: Color(0xFFFF830F), accentColor: Color(0xFFD87920)),
+          home: Main(),
+        )));
 
 class Main extends StatefulWidget {
   Main({Key? key}) : super(key: key);
@@ -23,11 +38,41 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
-  List<Category> categorias = [];
-  List<Product> productos = [];
+  List<ProductModel> productos = [];
+
   @override
   void initState() {
     super.initState();
+    context.read<CartProvider>().getCartData();
+    context.read<UserModel>().setUserData();
+  }
+
+  Future getCategories() async {
+    var response = await http.get(Uri.parse(url + "categories"));
+    var jsonCategories;
+    List<Category> categories;
+    if (response.statusCode == 200) {
+      jsonCategories = jsonDecode(response.body)['categories'];
+      categories = List.generate(
+          jsonCategories.length,
+          (index) => Category(
+              jsonCategories[index]['name'],
+              jsonCategories[index]['image'],
+              jsonCategories[index]['subcategories']));
+    } else {
+      categories = [];
+    }
+    return categories;
+  }
+
+  Future processPedido() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = await http.post(Uri.parse(url + 'cart/process'), body: {
+      'user': sharedPreferences.getString('user')
+    }, headers: {
+      HttpHeaders.authorizationHeader:
+          sharedPreferences.getString('token').toString(),
+    });
   }
 
   @override
@@ -47,28 +92,61 @@ class _MainState extends State<Main> {
             ),
 
             //vistas (home, cuenta, tienda, carrito)
-            body: PageView(
-              controller: _pageController,
-              onPageChanged: (int) {
-                print('cambio de página $int');
+            body: FutureBuilder(
+              future:
+                  // Future.delayed(Duration(seconds: 3), () =>
+                  getCategories()
+              // ),
+              ,
+              initialData: "",
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case ConnectionState.done:
+                    var data = snapshot.data;
+                    List<Category> categorias = [];
+                    if (data != null) {
+                      for (var i = 0; i < data.length; i++) {
+                        if (data[i].subcategories.length > 0) {
+                          for (var s = 0;
+                              s < data[i].subcategories.length;
+                              s++) {
+                            if (data[i].subcategories[s]['brands'].length > 0) {
+                              if (categorias.length >= 4) {
+                                break;
+                              }
+                              categorias.add(data[i]);
+                            }
+                          }
+                        }
+                      }
+                    } else {
+                      categorias = [];
+                    }
+                    return PageView(
+                      controller: _pageController,
+                      onPageChanged: (int) {},
+                      children: [
+                        Home(categorias),
+                        AccountPage(),
+                        Tiendas(categorias),
+                        CartPage(),
+                        GoogleMapView()
+                        // Center(
+                        //   child: Container(
+                        //     child: Text('Contacto'),
+                        //   ),
+                        // )
+                      ],
+                    );
+                  default:
+                    return Text('done');
+                }
               },
-              children: [
-                Home(productos),
-                globals.isLogged ? AccountPage() : LoginPage(),
-                Tiendas(),
-                Center(
-                  child: Container(
-                    child: Text('Aun no has agregado algo a tu carrito'),
-                  ),
-                ),
-                Center(
-                  child: Container(
-                    child: Text('Contacto'),
-                  ),
-                )
-              ],
             ),
-
             //botón central flotante de búsqueda
             floatingActionButton: FloatingActionButton(
               child: Container(
@@ -83,7 +161,10 @@ class _MainState extends State<Main> {
               backgroundColor: Theme.of(context).primaryColor,
               mini: false,
               clipBehavior: Clip.hardEdge,
-              onPressed: () => {_pageController.jumpToPage(2)},
+              onPressed: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => Search(categorias)))
+              },
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             //barra de menú inferior
@@ -114,7 +195,7 @@ class BottomNavBarState extends State<BottomNavBar> {
             bottomAppbarButton(widget._pageController, Icons.person, 1),
             bottomAppbarButton(widget._pageController, Icons.shopping_bag, 2),
             bottomAppbarButton(widget._pageController, Icons.shopping_cart, 3),
-            bottomAppbarButton(widget._pageController, Icons.phone, 4)
+            bottomAppbarButton(widget._pageController, Icons.map, 4)
           ]),
         ));
   }

@@ -2,6 +2,10 @@ library localizate_app_v1.globals;
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// String url = 'http://181.120.66.16:8000/';
+String url = 'http://181.120.66.16:8001/';
+String apiUrl = 'http://181.120.66.16:8001/api/flutter/';
+String imgUrl = "http://jadortanner.cu.ma/localizate/images/";
 bool isLogged = false;
 List<Map> categorias = [
   {

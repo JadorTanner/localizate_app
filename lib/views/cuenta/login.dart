@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/globals.dart' as globals;
+import 'package:localizate/models/UserModel.dart';
+import 'package:provider/provider.dart';
 
+String url = globals.apiUrl;
+
+// ignore: must_be_immutable
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
   @override
@@ -12,6 +17,14 @@ TextEditingController _emailController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
 
 class _LoginPageState extends State<LoginPage> {
+  var userModel;
+
+  @override
+  void initState() {
+    super.initState();
+    userModel = context.read<UserModel>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,11 +36,7 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(labelText: 'Email'),
           ),
           SizedBox(height: 20),
-          TextField(
-            controller: _passwordController,
-            decoration: InputDecoration(labelText: 'Contraseña'),
-            obscureText: true,
-          ),
+          PasswordField(),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,17 +44,47 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                   onPressed: () => {}, child: Text('Olvidé mi contraseña')),
               TextButton(
-                onPressed: () => {globals.isLogged = true, setState(() {})},
-                child: Text(
-                  'Iniciar sesión',
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateColor.resolveWith(
-                        (states) => Theme.of(context).primaryColor)),
-              )
+                  onPressed: () => {
+                        //inicia sesión por el método del provider de user
+                        userModel.login(_emailController.text,
+                            _passwordController.text, context)
+                      },
+                  child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      child: Text(
+                        'Iniciar sesión',
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Theme.of(context).primaryColor)))
             ],
           )
         ]));
+  }
+}
+
+//campo de contraseña, mostrar y ocultar contraseña
+class PasswordField extends StatefulWidget {
+  PasswordField({Key? key}) : super(key: key);
+
+  @override
+  _PasswordFieldState createState() => _PasswordFieldState();
+}
+
+class _PasswordFieldState extends State<PasswordField> {
+  bool obscure = true;
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _passwordController,
+      decoration: InputDecoration(
+          labelText: 'Contraseña',
+          suffixIcon: IconButton(
+              icon: Icon(obscure ? Icons.visibility : Icons.visibility_off),
+              onPressed: () => setState(() => obscure = !obscure))),
+      obscureText: obscure,
+    );
   }
 }
