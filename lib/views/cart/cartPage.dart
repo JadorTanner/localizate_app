@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:localizate/models/UserModel.dart';
 import 'package:localizate/models/productModel.dart';
 import 'package:localizate/views/tiendas/producto/producto.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:localizate/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 var formatter = NumberFormat('#,##0 Gs.', 'es_ES');
 String apiUrl = globals.apiUrl;
@@ -79,6 +81,7 @@ class _ItemsState extends State<Items> {
                 Text('Su pedido se ha procesado, está en estado pendiente'),
             duration: Duration(seconds: 2),
           ));
+          context.read<UserModel>().setOrders();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Ha ocurrido un error'),
