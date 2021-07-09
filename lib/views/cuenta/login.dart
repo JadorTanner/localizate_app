@@ -1,18 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
 import 'package:localizate/models/UserModel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 String url = globals.apiUrl;
 
 // ignore: must_be_immutable
 class LoginPage extends StatefulWidget {
-  LoginPage(this.setLogin, {Key? key}) : super(key: key);
-  var setLogin;
+  LoginPage({Key? key}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -30,32 +25,6 @@ class _LoginPageState extends State<LoginPage> {
     userModel = context.read<UserModel>();
   }
 
-  Future login() async {
-    var response = await http.post(Uri.parse(url + 'login'), body: {
-      'email': _emailController.text,
-      'password': _passwordController.text
-    });
-
-    var jsonResponse = jsonDecode(response.body);
-    print(jsonResponse);
-    if (jsonResponse['success']) {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      var user = jsonEncode(jsonResponse['user']);
-      sharedPreferences.setString('user', user);
-      sharedPreferences.setString(
-          'orders', jsonEncode(jsonResponse['pedidos']));
-      sharedPreferences.setString(
-          'token', jsonEncode(jsonResponse['token']['accessToken']));
-      widget.setLogin();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Ha ocurrido un error'),
-        duration: Duration(seconds: 2),
-      ));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -67,11 +36,7 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(labelText: 'Email'),
           ),
           SizedBox(height: 20),
-          TextField(
-            controller: _passwordController,
-            decoration: InputDecoration(labelText: 'Contraseña'),
-            obscureText: true,
-          ),
+          PasswordField(),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,9 +45,9 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () => {}, child: Text('Olvidé mi contraseña')),
               TextButton(
                   onPressed: () => {
+                        //inicia sesión por el método del provider de user
                         userModel.login(_emailController.text,
                             _passwordController.text, context)
-                        // login()
                       },
                   child: Padding(
                       padding:
@@ -97,5 +62,29 @@ class _LoginPageState extends State<LoginPage> {
             ],
           )
         ]));
+  }
+}
+
+//campo de contraseña, mostrar y ocultar contraseña
+class PasswordField extends StatefulWidget {
+  PasswordField({Key? key}) : super(key: key);
+
+  @override
+  _PasswordFieldState createState() => _PasswordFieldState();
+}
+
+class _PasswordFieldState extends State<PasswordField> {
+  bool obscure = true;
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _passwordController,
+      decoration: InputDecoration(
+          labelText: 'Contraseña',
+          suffixIcon: IconButton(
+              icon: Icon(obscure ? Icons.visibility : Icons.visibility_off),
+              onPressed: () => setState(() => obscure = !obscure))),
+      obscureText: obscure,
+    );
   }
 }

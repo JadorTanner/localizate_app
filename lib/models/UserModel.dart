@@ -19,6 +19,10 @@ class UserModel with ChangeNotifier {
   bool _isLogged = false;
   bool get isLogged => _isLogged;
 
+  List _orders = [];
+  List get orders => _orders;
+
+  //iniciar sesión
   login(email, password, context) async {
     var response = await http.post(Uri.parse(url + 'login'),
         body: {'email': email, 'password': password});
@@ -27,17 +31,22 @@ class UserModel with ChangeNotifier {
       if (jsonResponse['success']) {
         SharedPreferences sharedPreferences =
             await SharedPreferences.getInstance();
-        var user = jsonEncode(jsonResponse['user'].toString());
-        sharedPreferences.setString('user', user.toString());
+
+        var user = jsonEncode(jsonResponse['user']);
+
+        sharedPreferences.setString('user', user);
         sharedPreferences.setString(
             'token', jsonEncode(jsonResponse['token']['accessToken']));
-        print(user);
-        print(jsonResponse['token']['accessToken']);
-        // _name = user['name'];
-        // _email = user['email'];
-        _name = 'Jador Tanner';
-        _email = 'tannerjador@gmail.com';
+
+        _name = jsonResponse['user']['full_name'];
+        _email = jsonResponse['user']['email'];
         _isLogged = true;
+        _orders = [];
+        var jsonOrders = await getOrders();
+        for (var i = 0; i < jsonOrders.length; i++) {
+          _orders.add(jsonOrders[i]);
+        }
+
         notifyListeners();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -48,30 +57,69 @@ class UserModel with ChangeNotifier {
     }
   }
 
+  //cerrar sesión
   logout() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var token = sharedPreferences.getString('token').toString();
-    var response = await http.get(Uri.parse(url + 'logout'),
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    print(response.statusCode);
-    // if (response.statusCode == 200) {
-    sharedPreferences.remove('user');
-    sharedPreferences.remove('token');
-    sharedPreferences.remove('pedidos');
-    _isLogged = false;
-    _name = "";
-    _email = "";
-    notifyListeners();
-    // }
-  }
-
-  setUserData() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.getString('user') != null) {
-      _isLogged = true;
-      _name = 'Jador Tanner';
-      _email = 'tannerjador@gmail.com';
+    var response = await http.get(Uri.parse(url + 'logout'), headers: {
+      HttpHeaders.authorizationHeader: "Bearer " +
+          sharedPreferences.getString('token').toString().replaceAll('"', '')
+    });
+    if (response.statusCode == 200) {
+      sharedPreferences.remove('user');
+      sharedPreferences.remove('token');
+      sharedPreferences.remove('pedidos');
+      _isLogged = false;
+      _name = "";
+      _email = "";
       notifyListeners();
     }
+  }
+
+  //cargar los datos guardados en almacenamiento al iniciar la aplicación
+  setUserData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var user = sharedPreferences.getString('user');
+    if (user != null) {
+      var jsonUser = jsonDecode(user);
+      _isLogged = true;
+      _name = jsonUser['full_name'];
+      _email = jsonUser['email'];
+      var jsonOrders = await getOrders();
+      _orders = [];
+      for (var i = 0; i < jsonOrders.length; i++) {
+        _orders.add(jsonOrders[i]);
+      }
+      notifyListeners();
+    }
+  }
+
+  setOrders() async {
+    var jsonOrders = await getOrders();
+    _orders = [];
+    for (var i = 0; i < jsonOrders.length; i++) {
+      _orders.add(jsonOrders[i]);
+    }
+    notifyListeners();
+  }
+
+  //ordenes del usuario
+  getOrders() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = await http.post(Uri.parse(url + 'user/orders'), headers: {
+      HttpHeaders.authorizationHeader: "Bearer " +
+          sharedPreferences.getString('token').toString().replaceAll('"', '')
+    });
+    var userOrders;
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body)['orders'];
+      if (jsonResponse.length > 0) {
+        userOrders = jsonResponse;
+      } else {
+        userOrders = [];
+      }
+    } else {
+      userOrders = [];
+    }
+    return userOrders;
   }
 }
