@@ -102,7 +102,8 @@ class _ItemsState extends State<Items> {
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (builder) => ProductoDetails(items[index]))),
+                      builder: (builder) =>
+                          ProductoDetails(items[index]['id'], items[index]))),
               child: Card(
                   child: Container(
                       padding: EdgeInsets.all(10),

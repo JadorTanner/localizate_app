@@ -70,7 +70,8 @@ class ProductoTienda extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (builder) => ProductoDetails(_producto['id'])))
+                        builder: (builder) =>
+                            ProductoDetails(_producto['id'], _producto)))
               },
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 30),
@@ -81,24 +82,29 @@ class ProductoTienda extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image.network(
-                              imgUrl + _producto['image'],
-                              frameBuilder: (BuildContext context, Widget child,
-                                  int? frame, bool wasSynchronouslyLoaded) {
-                                if (wasSynchronouslyLoaded) {
-                                  return child;
-                                }
-                                return AnimatedOpacity(
-                                  child: child,
-                                  opacity: frame == null ? 0 : 1,
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeOut,
-                                );
-                              },
-                              height: 90,
-                              width: 90,
-                              fit: BoxFit.cover,
-                            ),
+                            Hero(
+                                tag: _producto['id'],
+                                child: Image.network(
+                                  imgUrl + _producto['image'],
+                                  frameBuilder: (BuildContext context,
+                                      Widget child,
+                                      int? frame,
+                                      bool wasSynchronouslyLoaded) {
+                                    if (wasSynchronouslyLoaded) {
+                                      return child;
+                                    }
+                                    return AnimatedOpacity(
+                                      child: child,
+                                      opacity: frame == null ? 0 : 1,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.easeOut,
+                                    );
+                                  },
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.cover,
+                                )),
                             SizedBox(width: 20),
                             Expanded(
                               child: Column(
