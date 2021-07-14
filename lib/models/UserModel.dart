@@ -69,12 +69,19 @@ class UserModel with ChangeNotifier {
           sharedPreferences.getString('token').toString().replaceAll('"', '')
     });
     if (response.statusCode == 200) {
+      //vaciar localstorage
       sharedPreferences.remove('user');
       sharedPreferences.remove('token');
       sharedPreferences.remove('pedidos');
+      sharedPreferences.remove('addresses');
+
+      //vaciar provider
       _isLogged = false;
       _name = "";
       _email = "";
+      _orders.clear();
+      _addresses.clear();
+
       notifyListeners();
     }
   }
@@ -162,6 +169,7 @@ class UserModel with ChangeNotifier {
 
   addAddress(name, principal, secundaria, referencia, numero, latitud, longitud,
       context) async {
+    bool added = false;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var response = await http.post(
         Uri.parse('http://181.120.66.16:8001/api/flutter/addresses/add'),
@@ -185,7 +193,8 @@ class UserModel with ChangeNotifier {
         content: Text('Se ha agregado correctamente'),
         duration: Duration(seconds: 2),
       ));
-      _addresses = jsonDecode(response.body);
+      added = true;
+      _addresses.add(jsonDecode(response.body));
       notifyListeners();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -193,5 +202,6 @@ class UserModel with ChangeNotifier {
         duration: Duration(seconds: 2),
       ));
     }
+    return added;
   }
 }

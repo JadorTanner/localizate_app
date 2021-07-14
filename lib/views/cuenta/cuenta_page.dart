@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/models/UserModel.dart';
+import 'package:localizate/views/cuenta/address/addAddress.dart';
 import 'package:localizate/views/cuenta/login.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +18,7 @@ class _AccountPageState extends State<AccountPage>
   bool isLogged = false;
   List<Widget> pages = [Text('Pedidos'), Text('Direcciones'), Text('Facturas')];
   late TabController _tabController;
+  List direcciones = [];
   @override
   void initState() {
     super.initState();
@@ -29,65 +31,91 @@ class _AccountPageState extends State<AccountPage>
     // userModel.logout();
     isLogged = userModel.isLogged;
     userModel.getOrders();
+    direcciones = userModel.addresses;
     List orders = userModel.orders;
     return isLogged
         ? Column(
             children: [
-              IconButton(
-                  icon: Icon(Icons.logout), onPressed: () => userModel.logout())
-              // Container(
-              //     padding: EdgeInsets.only(top: 40, bottom: 20),
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         Text(userModel.name,
-              //             style: Theme.of(context)
-              //                 .textTheme
-              //                 .headline4!
-              //                 .copyWith(color: Colors.black)),
-              //         Text(userModel.email,
-              //             style: Theme.of(context).textTheme.headline6),
-              //         IconButton(
-              //             icon: Icon(Icons.logout),
-              //             onPressed: () => userModel.logout())
-              //       ],
-              //     )),
-              // Container(
-              //   width: MediaQuery.of(context).size.width * 0.8,
-              //   child: TabBar(
-              //       labelColor: Colors.black,
-              //       unselectedLabelColor: Colors.black45,
-              //       labelPadding:
-              //           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              //       controller: _tabController,
-              //       tabs: pages),
-              // ),
-              // Expanded(
-              //     child: TabBarView(controller: _tabController, children: [
-              //   ListView(
-              //     children: List.generate(
-              //         orders.length,
-              //         (index) => OrderCard(
-              //             orders[index]['id'].toString(),
-              //             orders[index]['invoice_number'].toString(),
-              //             orders[index]['created_at'].toString(),
-              //             orders[index]['status'],
-              //             formatter
-              //                 .format(int.parse(
-              //                     double.parse(orders[index]['total'])
-              //                         .toString()))
-              //                 .toString()
-              //                 .toString(),
-              //             orders[index]['delivery_type'],
-              //             orders[index]['payment_type'])),
-              //   ),
-              //   ListView(
-              //     children: [Center(child: Text('Direcciones'))],
-              //   ),
-              //   ListView(
-              //     children: [Center(child: Text('Facturas'))],
-              //   )
-              // ]))
+              // IconButton(
+              //     icon: Icon(Icons.logout), onPressed: () => userModel.logout())
+              Container(
+                  padding: EdgeInsets.only(top: 40, bottom: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(userModel.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4!
+                              .copyWith(color: Colors.black)),
+                      Text(userModel.email,
+                          style: Theme.of(context).textTheme.headline6),
+                      IconButton(
+                          icon: Icon(Icons.logout),
+                          onPressed: () => userModel.logout())
+                    ],
+                  )),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: TabBar(
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.black45,
+                    labelPadding:
+                        EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                    controller: _tabController,
+                    tabs: pages),
+              ),
+              Expanded(
+                  child: TabBarView(controller: _tabController, children: [
+                ListView(
+                  children: List.generate(
+                      orders.length,
+                      (index) => OrderCard(
+                          orders[index]['id'].toString(),
+                          orders[index]['invoice_number'].toString(),
+                          orders[index]['created_at'].toString(),
+                          orders[index]['status'],
+                          // orders[index]['total'],
+                          orders[index]['delivery_type'],
+                          orders[index]['payment_type'])),
+                ),
+                // ListView(
+                //   children: [Center(child: Text('Ordenes'))],
+                // ),
+                ListView(
+                  children: [
+                    TextButton.icon(
+                        onPressed: () => {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddAddress()))
+                            },
+                        icon: Icon(Icons.map_outlined),
+                        label: Padding(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                          child: Text('Agregar Dirección'),
+                        )),
+                    ...List.generate(
+                        direcciones.length,
+                        (index) => Card(
+                            child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                child: Column(children: [
+                                  Text('Nombre: ' + direcciones[index]['name']),
+                                  Text('Calle Principal: ' +
+                                      direcciones[index]['street1']),
+                                  Text('Calle Secundaria: ' +
+                                      direcciones[index]['street2']),
+                                ])))),
+                  ],
+                ),
+                ListView(
+                  children: [Center(child: Text('Facturas'))],
+                )
+              ]))
             ],
           )
         : LoginPage();
@@ -100,7 +128,7 @@ class OrderCard extends StatelessWidget {
     this.orderNumber,
     this.orderDate,
     this.orderState,
-    this.orderTotal,
+    // this.orderTotal,
     this.deliveryType,
     this.paymentType, {
     Key? key,
@@ -111,7 +139,7 @@ class OrderCard extends StatelessWidget {
   final String orderDate;
   final String orderState;
   final int deliveryType;
-  final String orderTotal;
+  // final String orderTotal;
   final String paymentType;
 
   @override
@@ -164,16 +192,16 @@ class OrderCard extends StatelessWidget {
                       SizedBox(
                         width: 20,
                       ),
-                      Text("Gs. " + orderTotal),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(deliveryType == 1 ? "delivery" : "pasar a buscar"),
+                      // Text("Gs. " + orderTotal),
                       SizedBox(
                         width: 20,
                       ),
                     ],
-                  )
+                  ),
+                  Text(deliveryType == 1 ? "delivery" : "pasar a buscar"),
+                  SizedBox(
+                    width: 20,
+                  ),
                 ],
               )
             ],

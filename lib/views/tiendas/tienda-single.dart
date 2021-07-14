@@ -70,7 +70,7 @@ class ProductoTienda extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (builder) => ProductoDetails(_producto)))
+                        builder: (builder) => ProductoDetails(_producto['id'])))
               },
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 30),

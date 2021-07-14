@@ -1,23 +1,20 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:localizate/models/UserModel.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:location/location.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
-class GoogleMapView extends StatefulWidget {
-  GoogleMapView({Key? key}) : super(key: key);
+class AddAddress extends StatefulWidget {
+  AddAddress({Key? key}) : super(key: key);
 
   @override
-  _GoogleMapViewState createState() => _GoogleMapViewState();
+  _AddAddressState createState() => _AddAddressState();
 }
 
-class _GoogleMapViewState extends State<GoogleMapView> {
+class _AddAddressState extends State<AddAddress> {
   late GoogleMapController _mapController;
 
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -34,9 +31,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   TextEditingController _calleSecundaria = TextEditingController();
   TextEditingController _referencia = TextEditingController();
 
-  //direcciones del usuario
-  List direcciones = [];
   var userModel;
+
   @override
   void initState() {
     super.initState();
@@ -64,7 +60,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   }
 
   Future agregarDireccion() async {
-    userModel.addAddress(
+    bool added = await userModel.addAddress(
         _nameController.text,
         _callePrincipal.text,
         _calleSecundaria.text,
@@ -73,54 +69,23 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         _finalPosition.latitude.toString(),
         _finalPosition.longitude.toString(),
         context);
+    if (added) {
+      Navigator.pop(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    userModel = context.watch<UserModel>();
-    direcciones = userModel.addresses;
-    print(direcciones);
-    return RefreshIndicator(
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: ListView(
-            children: [
-              TextButton.icon(
-                  onPressed: () => {
-                        Scaffold.of(context)
-                            .showBottomSheet((context) => BottomSheet(
-                                onClosing: () => {},
-                                builder: (context) => Center(
-                                      child: Column(
-                                        children: [
-                                          addAddress(context),
-                                          buildMap()
-                                        ],
-                                      ),
-                                    )))
-                      },
-                  icon: Icon(Icons.map_outlined),
-                  label: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: Text('Mis Direcciones'),
-                  )),
-              ...List.generate(
-                  direcciones.length,
-                  (index) => Card(
-                      child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          child: Column(children: [
-                            Text('Nombre: ' + direcciones[index]['name']),
-                            Text('Calle Principal: ' +
-                                direcciones[index]['street1']),
-                            Text('Calle Secundaria: ' +
-                                direcciones[index]['street2']),
-                          ])))),
-            ],
+    userModel = context.read<UserModel>();
+    return Scaffold(
+        appBar: AppBar(),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [addAddress(context), buildMap()],
           ),
-        ),
-        onRefresh: () => userModel.getAddresses());
+        ));
   }
 
   Column addAddress(BuildContext context) {
@@ -185,34 +150,35 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     );
   }
 
-  Expanded buildMap() {
-    return Expanded(
+  SizedBox buildMap() {
+    return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.5,
         child: GoogleMap(
-      initialCameraPosition: _initialCamPosition,
-      myLocationButtonEnabled: true,
-      // myLocationEnabled: true,
-      zoomControlsEnabled: false,
-      markers: Set<Marker>.of(markers.values),
-      onMapCreated: (GoogleMapController _cntlr) {
-        _mapController = _cntlr;
-        Completer<GoogleMapController>().complete(_mapController);
-      },
-      onTap: (LatLng coords) => setPosition(coords),
-      //actualiza el marcador a la nueva zona
-      onCameraMove: (CameraPosition position) {
-        Marker marker = markers[namopuaMarkerId]!;
-        Marker updatedMarker = marker.copyWith(
-          positionParam: position.target,
-        );
-        setState(() {
-          markers[namopuaMarkerId] = updatedMarker;
-        });
-      },
-      onCameraIdle: () {
-        setState(() {
-          _finalPosition = markers.values.first.position;
-        });
-      },
-    ));
+          initialCameraPosition: _initialCamPosition,
+          myLocationButtonEnabled: true,
+          // myLocationEnabled: true,
+          zoomControlsEnabled: false,
+          markers: Set<Marker>.of(markers.values),
+          onMapCreated: (GoogleMapController _cntlr) {
+            _mapController = _cntlr;
+            Completer<GoogleMapController>().complete(_mapController);
+          },
+          onTap: (LatLng coords) => setPosition(coords),
+          //actualiza el marcador a la nueva zona
+          onCameraMove: (CameraPosition position) {
+            Marker marker = markers[namopuaMarkerId]!;
+            Marker updatedMarker = marker.copyWith(
+              positionParam: position.target,
+            );
+            // setState(() {
+            markers[namopuaMarkerId] = updatedMarker;
+            // });
+          },
+          onCameraIdle: () {
+            setState(() {
+              _finalPosition = markers.values.first.position;
+            });
+          },
+        ));
   }
 }
