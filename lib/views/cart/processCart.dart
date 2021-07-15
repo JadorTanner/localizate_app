@@ -15,11 +15,7 @@ class _ProcessCartState extends State<ProcessCart> {
   List<PageViewModel> pages = [
     PageViewModel(
         title: 'Selecciona una dirección', bodyWidget: SelectAddress()),
-    PageViewModel(
-        title: 'Factura?',
-        bodyWidget: Center(
-          child: Text('Facturas'),
-        )),
+    PageViewModel(title: 'Factura?', bodyWidget: SelectFactura()),
   ];
 
   @override
@@ -49,6 +45,45 @@ class _SelectAddressState extends State<SelectAddress> {
       children: List.generate(
         user.addresses.length,
         (index) => AddressCard(direccion: user.addresses[index]),
+      ),
+    );
+  }
+}
+
+class SelectFactura extends StatefulWidget {
+  SelectFactura({Key? key}) : super(key: key);
+
+  @override
+  _SelectFacturaState createState() => _SelectFacturaState();
+}
+
+class _SelectFacturaState extends State<SelectFactura> {
+  @override
+  Widget build(BuildContext context) {
+    UserModel user = context.watch<UserModel>();
+    return Column(
+      children: List.generate(
+        user.facturas.length,
+        (index) => FacturaCard(user.facturas[index]),
+      ),
+    );
+  }
+}
+
+class FacturaCard extends StatelessWidget {
+  FacturaCard(this.factura, {Key? key}) : super(key: key);
+  var factura;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          child: Center(
+            child: Text(factura['ruc'] ?? 'Factura'),
+          ),
+        ),
       ),
     );
   }

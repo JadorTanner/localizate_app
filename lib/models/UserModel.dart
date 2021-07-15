@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 String url = "http://181.120.66.16:8001/api/flutter/";
 
 class UserModel with ChangeNotifier {
+  //las variables que comienzan con _ son variables locales
+  //las demás variables son getters que se acceden desde afuera
   String _name = "";
   String get name => _name;
 
@@ -24,6 +26,9 @@ class UserModel with ChangeNotifier {
 
   List _addresses = [];
   List get addresses => _addresses;
+
+  List _facturas = [];
+  List get facturas => _facturas;
 
   //iniciar sesión
   login(email, password, context) async {
@@ -44,11 +49,16 @@ class UserModel with ChangeNotifier {
         _name = jsonResponse['user']['full_name'];
         _email = jsonResponse['user']['email'];
         _isLogged = true;
-        _orders = [];
         _addresses = await getAddresses();
+        _orders = [];
         var jsonOrders = await getOrders();
         for (var i = 0; i < jsonOrders.length; i++) {
           _orders.add(jsonOrders[i]);
+        }
+        _facturas = [];
+        var jsonFacturas = await getFacturas();
+        for (var i = 0; i < jsonFacturas.length; i++) {
+          _facturas.add(jsonFacturas[i]);
         }
 
         notifyListeners();
@@ -144,7 +154,7 @@ class UserModel with ChangeNotifier {
   }
 
   setAddresses() async {
-    var jsonAddresses = await getAddresses()();
+    var jsonAddresses = await getAddresses();
     _addresses = [];
     for (var i = 0; i < jsonAddresses.length; i++) {
       _addresses.add(jsonAddresses[i]);
@@ -203,5 +213,54 @@ class UserModel with ChangeNotifier {
       ));
     }
     return added;
+  }
+
+  setFacturas() async {
+    var jsonFacturas = await getFacturas();
+    _facturas = [];
+    for (var i = 0; i < jsonFacturas.length; i++) {
+      _facturas.add(jsonFacturas[i]);
+    }
+    notifyListeners();
+  }
+
+  getFacturas() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url + 'facturas'), headers: {
+      HttpHeaders.authorizationHeader: "Bearer " +
+          sharedPreferences.getString('token').toString().replaceAll('"', '')
+    });
+    var jsonFacturas = [];
+    if (response.statusCode == 200) {
+      jsonFacturas = jsonDecode(response.body);
+      _facturas = jsonFacturas;
+      notifyListeners();
+    }
+    return jsonFacturas;
+  }
+
+  addFactura(razon, ruc, email, telefono, direccion) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = await http.post(
+        Uri.parse('http://181.120.66.16:8001/api/flutter/agregar-factura'),
+        body: {
+          'razon': razon,
+          'ruc': ruc,
+          'email': email,
+          'telefono': telefono,
+          'direccion': direccion,
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer " +
+              sharedPreferences
+                  .getString('token')
+                  .toString()
+                  .replaceAll('"', '')
+        });
+
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      _facturas.add(jsonResponse['data']);
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/models/UserModel.dart';
 import 'package:localizate/views/cuenta/address/addAddress.dart';
+import 'package:localizate/views/cuenta/facturas/agregarFactura.dart';
 import 'package:localizate/views/cuenta/login.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,8 @@ class _AccountPageState extends State<AccountPage>
   List<Widget> pages = [Text('Pedidos'), Text('Direcciones'), Text('Facturas')];
   late TabController _tabController;
   List direcciones = [];
+  List facturas = [];
+  List orders = [];
   @override
   void initState() {
     super.initState();
@@ -30,9 +33,12 @@ class _AccountPageState extends State<AccountPage>
     var userModel = context.watch<UserModel>();
     // userModel.logout();
     isLogged = userModel.isLogged;
-    userModel.getOrders();
     direcciones = userModel.addresses;
-    List orders = userModel.orders;
+    orders = userModel.orders;
+
+    userModel.getOrders();
+    // userModel.getFacturas();
+    facturas = userModel.facturas;
     return isLogged
         ? Column(
             children: [
@@ -101,9 +107,29 @@ class _AccountPageState extends State<AccountPage>
                         (index) => AddressCard(direccion: direcciones[index])),
                   ],
                 ),
-                ListView(
-                  children: [Center(child: Text('Facturas'))],
-                )
+                ListView(children: [
+                  TextButton.icon(
+                      onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AgregarFactura()))
+                          },
+                      icon: Icon(Icons.map_outlined),
+                      label: Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                        child: Text('Agregar Factura'),
+                      )),
+                  ...List.generate(
+                      facturas.length,
+                      (index) => Card(
+                              child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 20),
+                            child: Text(facturas[index]['ruc'] ?? 'factura'),
+                          ))),
+                ])
               ]))
             ],
           )
