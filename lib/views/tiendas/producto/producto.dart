@@ -45,6 +45,12 @@ class ProductoDetails extends StatelessWidget {
       itemOnCart = items[index];
       contador = int.parse(itemOnCart['cantidad']);
     }
+    if (localProduct['image_2'] != null) {
+      images.add(localProduct['image_2']);
+    }
+    if (localProduct['image_3'] != null) {
+      images.add(localProduct['image_3']);
+    }
     return Scaffold(
         backgroundColor: Colors.orange,
         floatingActionButton: FloatingActionButton(
@@ -61,69 +67,71 @@ class ProductoDetails extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         body: ListView(children: [
           Container(
-            width: MediaQuery.of(context).size.width,
-            height: 400,
-            child: Hero(
-                tag: localProduct['id'],
-                child: Image.network(
-                  globals.imgUrl + localProduct['image'],
-                  frameBuilder: (BuildContext context, Widget child, frame,
-                      bool wasSynchronouslyLoaded) {
-                    if (wasSynchronouslyLoaded) {
-                      return child;
-                    }
-                    return AnimatedOpacity(
-                      child: child,
-                      opacity: frame == null ? 0 : 1,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOut,
-                    );
-                  },
-                )),
-            // CarouselSlider(
-            //     options: CarouselOptions(
-            //         enlargeCenterPage: true, viewportFraction: 0.8),
-            //     items: [
-            //       Hero(
-            //           tag: localProduct['id'],
-            //           child: Image.network(
-            //             globals.imgUrl + localProduct['image'],
-            //             frameBuilder: (BuildContext context, Widget child,
-            //                 frame, bool wasSynchronouslyLoaded) {
-            //               if (wasSynchronouslyLoaded) {
-            //                 return child;
-            //               }
-            //               return AnimatedOpacity(
-            //                 child: child,
-            //                 opacity: frame == null ? 0 : 1,
-            //                 duration: const Duration(milliseconds: 300),
-            //                 curve: Curves.easeOut,
-            //               );
-            //             },
-            //           )),
-            //       ...List.generate(
-            //         images.length,
-            //         (index) {
-            //           print(index);
-            //           return Image.network(
-            //             globals.imgUrl + images[index],
-            //             frameBuilder: (BuildContext context, Widget child,
-            //                 frame, bool wasSynchronouslyLoaded) {
-            //               if (wasSynchronouslyLoaded) {
-            //                 return child;
-            //               }
-            //               return AnimatedOpacity(
-            //                 child: child,
-            //                 opacity: frame == null ? 0 : 1,
-            //                 duration: const Duration(milliseconds: 300),
-            //                 curve: Curves.easeOut,
-            //               );
-            //             },
-            //           );
-            //         },
-            //       )
-            //     ])
-          ),
+              width: MediaQuery.of(context).size.width,
+              height: 400,
+              child:
+                  // Hero(
+                  //     tag: localProduct['id'],
+                  //     child: Image.network(
+                  //       globals.imgUrl + localProduct['image'],
+                  //       frameBuilder: (BuildContext context, Widget child, frame,
+                  //           bool wasSynchronouslyLoaded) {
+                  //         if (wasSynchronouslyLoaded) {
+                  //           return child;
+                  //         }
+                  //         return AnimatedOpacity(
+                  //           child: child,
+                  //           opacity: frame == null ? 0 : 1,
+                  //           duration: const Duration(milliseconds: 300),
+                  //           curve: Curves.easeOut,
+                  //         );
+                  //       },
+                  //     )),
+                  CarouselSlider(
+                      options: CarouselOptions(
+                          enlargeCenterPage: true,
+                          viewportFraction: 0.8,
+                          enableInfiniteScroll: false),
+                      items: [
+                    Hero(
+                        tag: localProduct['id'],
+                        child: Image.network(
+                          globals.imgUrl + localProduct['image'],
+                          frameBuilder: (BuildContext context, Widget child,
+                              frame, bool wasSynchronouslyLoaded) {
+                            if (wasSynchronouslyLoaded) {
+                              return child;
+                            }
+                            return AnimatedOpacity(
+                              child: child,
+                              opacity: frame == null ? 0 : 1,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            );
+                          },
+                        )),
+                    ...List.generate(
+                      images.length,
+                      (index) {
+                        print(index);
+                        return Image.network(
+                          globals.imgUrl + images[index],
+                          frameBuilder: (BuildContext context, Widget child,
+                              frame, bool wasSynchronouslyLoaded) {
+                            if (wasSynchronouslyLoaded) {
+                              return child;
+                            }
+                            return AnimatedOpacity(
+                              child: child,
+                              opacity: frame == null ? 0 : 1,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            );
+                          },
+                        );
+                      },
+                    )
+                  ])),
           FutureBuilder(
               future: getProductData(),
               initialData: "",

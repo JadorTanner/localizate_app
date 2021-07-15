@@ -17,8 +17,8 @@ class AddAddress extends StatefulWidget {
 class _AddAddressState extends State<AddAddress> {
   late GoogleMapController _mapController;
 
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-  MarkerId namopuaMarkerId = MarkerId('userPos');
+  double camZoom = 14;
+
   CameraPosition _initialCamPosition = CameraPosition(
       target: LatLng(-25.333887493447556, -57.63717781886183), zoom: 14);
   LatLng _finalPosition = LatLng(-25.333887493447556, -57.63717781886183);
@@ -30,6 +30,10 @@ class _AddAddressState extends State<AddAddress> {
   TextEditingController _callePrincipal = TextEditingController();
   TextEditingController _calleSecundaria = TextEditingController();
   TextEditingController _referencia = TextEditingController();
+
+  late double mapWidth;
+  late double mapHeight;
+  double iconSize = 40;
 
   var userModel;
 
@@ -43,20 +47,17 @@ class _AddAddressState extends State<AddAddress> {
   userLocation() async {
     LocationData location = await _userLocation.getLocation();
     LatLng userPosition = LatLng(location.latitude, location.longitude);
-    markers = {
-      namopuaMarkerId: Marker(
-          draggable: false, position: userPosition, markerId: namopuaMarkerId)
-    };
     _initialCamPosition = CameraPosition(
-        target: LatLng(location.latitude, location.longitude), zoom: 14);
+        target: LatLng(location.latitude, location.longitude), zoom: camZoom);
     _finalPosition = LatLng(location.latitude, location.longitude);
+    setPosition(LatLng(location.latitude, location.longitude));
     setState(() {});
   }
 
   //se setea una posicion animanco la camara
   setPosition(LatLng coords) {
     _mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: coords, zoom: 14)));
+        CameraPosition(target: coords, zoom: camZoom)));
   }
 
   Future agregarDireccion() async {
@@ -150,35 +151,53 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
-  SizedBox buildMap() {
-    return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.5,
-        child: GoogleMap(
-          initialCameraPosition: _initialCamPosition,
-          myLocationButtonEnabled: true,
-          // myLocationEnabled: true,
-          zoomControlsEnabled: false,
-          markers: Set<Marker>.of(markers.values),
-          onMapCreated: (GoogleMapController _cntlr) {
-            _mapController = _cntlr;
-            Completer<GoogleMapController>().complete(_mapController);
-          },
-          onTap: (LatLng coords) => setPosition(coords),
-          //actualiza el marcador a la nueva zona
-          onCameraMove: (CameraPosition position) {
-            Marker marker = markers[namopuaMarkerId]!;
-            Marker updatedMarker = marker.copyWith(
-              positionParam: position.target,
-            );
-            // setState(() {
-            markers[namopuaMarkerId] = updatedMarker;
-            // });
-          },
-          onCameraIdle: () {
-            setState(() {
-              _finalPosition = markers.values.first.position;
-            });
-          },
-        ));
+  Stack buildMap() {
+    mapWidth = MediaQuery.of(context).size.width;
+    mapHeight = MediaQuery.of(context).size.height * 0.5;
+    return Stack(
+      alignment: Alignment(0.0, 0.0),
+      children: [
+        Container(
+          width: mapWidth,
+          height: mapHeight,
+          child: GoogleMap(
+            initialCameraPosition: _initialCamPosition,
+            myLocationButtonEnabled: true,
+            // myLocationEnabled: true,
+            zoomControlsEnabled: false,
+            onMapCreated: (GoogleMapController _cntlr) {
+              _mapController = _cntlr;
+              Completer<GoogleMapController>().complete(_mapController);
+            },
+            onTap: (LatLng coords) {
+              setPosition(coords);
+            },
+            //actualiza el marcador a la nueva zona
+            onCameraMove: (CameraPosition position) {
+              _finalPosition = position.target;
+              // Marker marker = markers[namopuaMarkerId]!;
+              // Marker updatedMarker = marker.copyWith(
+              //   positionParam: position.target,
+              // );
+              // // setState(() {
+              // markers[namopuaMarkerId] = updatedMarker;
+              // // });
+            },
+            onCameraIdle: () {
+              setState(() {});
+            },
+          ),
+        ),
+        Positioned(
+          top: (mapHeight - iconSize * 2) / 2,
+          right: (mapWidth - iconSize * 2) / 2,
+          child: new Icon(
+            Icons.location_pin,
+            size: iconSize,
+            color: Theme.of(context).primaryColor,
+          ),
+        )
+      ],
+    );
   }
 }

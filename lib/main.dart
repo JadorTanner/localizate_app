@@ -128,7 +128,7 @@ class _MainState extends State<Main> {
                         Home(categorias),
                         AccountPage(),
                         Tiendas(categorias),
-                        CartPage(),
+                        CartPage(_pageController),
                         // GoogleMapView()
                         // Center(
                         //   child: Container(

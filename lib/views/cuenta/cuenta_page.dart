@@ -97,19 +97,8 @@ class _AccountPageState extends State<AccountPage>
                               EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                           child: Text('Agregar Dirección'),
                         )),
-                    ...List.generate(
-                        direcciones.length,
-                        (index) => Card(
-                            child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 20),
-                                child: Column(children: [
-                                  Text('Nombre: ' + direcciones[index]['name']),
-                                  Text('Calle Principal: ' +
-                                      direcciones[index]['street1']),
-                                  Text('Calle Secundaria: ' +
-                                      direcciones[index]['street2']),
-                                ])))),
+                    ...List.generate(direcciones.length,
+                        (index) => AddressCard(direccion: direcciones[index])),
                   ],
                 ),
                 ListView(
@@ -119,6 +108,30 @@ class _AccountPageState extends State<AccountPage>
             ],
           )
         : LoginPage();
+  }
+}
+
+class AddressCard extends StatelessWidget {
+  const AddressCard({
+    Key? key,
+    required this.direccion,
+  }) : super(key: key);
+
+  final direccion;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Card(
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Column(children: [
+                  Text('Nombre: ' + direccion['name']),
+                  Text('Calle Principal: ' + direccion['street1']),
+                  Text('Calle Secundaria: ' + direccion['street2']),
+                ]))));
   }
 }
 

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:localizate/views/tiendas/producto/producto.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
+import 'package:localizate/views/tiendas/producto.dart';
 
 String imgUrl = globals.imgUrl;
 
