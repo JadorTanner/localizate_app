@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/models/UserModel.dart';
+import 'package:localizate/utils/widgetsComunes.dart';
 import 'package:localizate/views/cuenta/address/addAddress.dart';
 import 'package:localizate/views/cuenta/facturas/agregarFactura.dart';
 import 'package:localizate/views/cuenta/login.dart';
@@ -16,6 +17,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage>
     with SingleTickerProviderStateMixin {
+  late UserModel userModel;
   bool isLogged = false;
   List<Widget> pages = [Text('Pedidos'), Text('Direcciones'), Text('Facturas')];
   late TabController _tabController;
@@ -26,17 +28,19 @@ class _AccountPageState extends State<AccountPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: pages.length, vsync: this);
+    // userModel.getOrders();
+    // userModel.getAddresses();
+    // userModel.getFacturas();
   }
 
   @override
   Widget build(BuildContext context) {
-    var userModel = context.watch<UserModel>();
+    userModel = context.watch<UserModel>();
     // userModel.logout();
     isLogged = userModel.isLogged;
     direcciones = userModel.addresses;
     orders = userModel.orders;
 
-    userModel.getOrders();
     // userModel.getFacturas();
     facturas = userModel.facturas;
     return isLogged
@@ -134,117 +138,5 @@ class _AccountPageState extends State<AccountPage>
             ],
           )
         : LoginPage();
-  }
-}
-
-class AddressCard extends StatelessWidget {
-  const AddressCard({
-    Key? key,
-    required this.direccion,
-  }) : super(key: key);
-
-  final direccion;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Card(
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Column(children: [
-                  Text('Nombre: ' + direccion['name']),
-                  Text('Calle Principal: ' + direccion['street1']),
-                  Text('Calle Secundaria: ' + direccion['street2']),
-                ]))));
-  }
-}
-
-class OrderCard extends StatelessWidget {
-  const OrderCard(
-    this.orderId,
-    this.orderNumber,
-    this.orderDate,
-    this.orderState,
-    // this.orderTotal,
-    this.deliveryType,
-    this.paymentType, {
-    Key? key,
-  }) : super(key: key);
-
-  final String orderId;
-  final String orderNumber;
-  final String orderDate;
-  final String orderState;
-  final int deliveryType;
-  // final String orderTotal;
-  final String paymentType;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.only(top: 20, left: 20, right: 20),
-        child: Card(
-          clipBehavior: Clip.hardEdge,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            children: [
-              Container(
-                color: Theme.of(context).primaryColor,
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                child: Column(
-                  children: [
-                    Text(orderNumber,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5!
-                            .copyWith(color: Colors.white)),
-                    Text(orderDate.split(" ")[0],
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2!
-                            .copyWith(color: Colors.black38)),
-                    Text(orderDate.split(" ")[1],
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2!
-                            .copyWith(color: Colors.black38))
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(orderState,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6!
-                          .copyWith(color: Theme.of(context).primaryColor)),
-                  Row(
-                    children: [
-                      Text(paymentType),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      // Text("Gs. " + orderTotal),
-                      SizedBox(
-                        width: 20,
-                      ),
-                    ],
-                  ),
-                  Text(deliveryType == 1 ? "delivery" : "pasar a buscar"),
-                  SizedBox(
-                    width: 20,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ));
   }
 }
