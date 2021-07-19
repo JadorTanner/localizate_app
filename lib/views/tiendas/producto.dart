@@ -66,7 +66,8 @@ class ProductoDetails extends StatelessWidget {
                       enableInfiniteScroll: false),
                   items: [
                     Hero(
-                        tag: localProduct['id'],
+                        tag: localProduct['id'].toString() +
+                            localProduct['image'],
                         child: Image.network(
                           globals.imgUrl + localProduct['image'],
                           frameBuilder: (BuildContext context, Widget child,
@@ -85,7 +86,6 @@ class ProductoDetails extends StatelessWidget {
                     ...List.generate(
                       images.length,
                       (index) {
-                        print(index);
                         return Image.network(
                           globals.imgUrl + images[index],
                           frameBuilder: (BuildContext context, Widget child,
@@ -132,11 +132,6 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
     super.initState();
 
     producto = widget.producto;
-    if (producto['product_fields'] != null) {
-      getExtraFields(producto['product_fields']);
-    } else {
-      extraFields = [];
-    }
     isOnCart = widget.isOnCart;
     contador = widget.contador;
 
@@ -145,15 +140,25 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
 
   //suma una vista al producto
   Future getProductData() async {
-    http.get(Uri.parse('http://181.120.66.16:8001/api/flutter/producto/' +
-        producto['id'].toString()));
+    var response = await http.get(Uri.parse(
+        'http://181.120.66.16:8001/api/flutter/producto/' +
+            producto['id'].toString()));
+    print(jsonDecode(response.body)['special_fields']);
+    if (jsonDecode(response.body)['special_fields'] != null) {
+      setState(() {
+        extraFields = jsonDecode(response.body)['special_fields'];
+      });
+      // getExtraFields(extraFields);
+    }
   }
 
   //extra fields
   List<Widget> getExtraFields(fields) {
+    print(fields[0]);
     return extraFields = List<Widget>.generate(fields.length, (fieldIndex) {
       switch (fields[fieldIndex]['type']) {
         case 'options':
+          print(fields[fieldIndex]['type']);
           if (fields[fieldIndex]['multiple']) {
             var options = List.generate(
                 jsonDecode(fields[fieldIndex]['options']).length, (index) {
@@ -231,10 +236,7 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
-            Text(producto['description'] +
-                producto['description'] +
-                producto['description'] +
-                producto['description']),
+            Text(producto['description']),
             SizedBox(height: 20),
             ...extraFields,
             SizedBox(height: 20),
@@ -354,7 +356,6 @@ class _CantidadContadorState extends State<CantidadContador> {
 
   @override
   Widget build(BuildContext context) {
-    print(contador);
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

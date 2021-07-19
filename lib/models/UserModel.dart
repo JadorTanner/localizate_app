@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -49,12 +50,19 @@ class UserModel with ChangeNotifier {
         _name = jsonResponse['user']['full_name'];
         _email = jsonResponse['user']['email'];
         _isLogged = true;
-        _addresses = await getAddresses();
+
+        _addresses = [];
+        var jsonAddresses = await getAddresses();
+        for (var i = 0; i < jsonAddresses.length; i++) {
+          _addresses.add(jsonAddresses[i]);
+        }
+
         _orders = [];
         var jsonOrders = await getOrders();
         for (var i = 0; i < jsonOrders.length; i++) {
           _orders.add(jsonOrders[i]);
         }
+
         _facturas = [];
         var jsonFacturas = await getFacturas();
         for (var i = 0; i < jsonFacturas.length; i++) {
@@ -62,6 +70,46 @@ class UserModel with ChangeNotifier {
         }
 
         notifyListeners();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Ha ocurrido un error'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    }
+  }
+
+  //registrarse
+  register(name, lastName, email, phone, password, context) async {
+    var registerResponse = await http.post(Uri.parse(url + 'register'), body: {
+      'first_name': name,
+      'last_name': lastName,
+      'phone': phone,
+      'email': email,
+      'password': password
+    });
+    if (registerResponse.statusCode == 200) {
+      var jsonResponse = jsonDecode(registerResponse.body);
+      if (jsonResponse['success']) {
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+
+        var user = jsonEncode(jsonResponse['user']);
+
+        sharedPreferences.setString('user', user);
+        sharedPreferences.setString(
+            'token', jsonEncode(jsonResponse['token']['accessToken']));
+
+        _name = jsonResponse['user']['full_name'];
+        _email = jsonResponse['user']['email'];
+        _isLogged = true;
+
+        _addresses = [];
+        _orders = [];
+        _facturas = [];
+
+        notifyListeners();
+        Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Ha ocurrido un error'),
@@ -119,6 +167,13 @@ class UserModel with ChangeNotifier {
       for (var i = 0; i < jsonAddresses.length; i++) {
         _addresses.add(jsonAddresses[i]);
       }
+
+      //facturas
+      var jsonFacturas = await getAddresses();
+      _facturas = [];
+      for (var i = 0; i < jsonFacturas.length; i++) {
+        _facturas.add(jsonFacturas[i]);
+      }
       notifyListeners();
     }
   }
@@ -171,8 +226,6 @@ class UserModel with ChangeNotifier {
     var jsonAddreses = [];
     if (response.statusCode == 200) {
       jsonAddreses = jsonDecode(response.body);
-      _addresses = jsonAddreses;
-      notifyListeners();
     }
     return jsonAddreses;
   }
@@ -233,8 +286,6 @@ class UserModel with ChangeNotifier {
     var jsonFacturas = [];
     if (response.statusCode == 200) {
       jsonFacturas = jsonDecode(response.body);
-      _facturas = jsonFacturas;
-      notifyListeners();
     }
     return jsonFacturas;
   }
@@ -262,5 +313,6 @@ class UserModel with ChangeNotifier {
       var jsonResponse = jsonDecode(response.body);
       _facturas.add(jsonResponse['data']);
     }
+    return true;
   }
 }

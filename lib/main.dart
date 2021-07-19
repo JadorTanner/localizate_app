@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:localizate/globals.dart';
 import 'package:localizate/models/CategoryModel.dart';
@@ -58,12 +59,12 @@ class _MainState extends State<Main> {
     List<Category> categories;
     if (response.statusCode == 200) {
       jsonCategories = jsonDecode(response.body)['categories'];
-      categories = List.generate(
-          jsonCategories.length,
-          (index) => Category(
-              jsonCategories[index]['name'],
-              jsonCategories[index]['image'],
-              jsonCategories[index]['subcategories']));
+      categories = List.generate(jsonCategories.length, (index) {
+        return Category(
+            jsonCategories[index]['name'],
+            jsonCategories[index]['image'],
+            jsonCategories[index]['subcategories']);
+      });
     } else {
       categories = [];
     }
@@ -125,16 +126,10 @@ class _MainState extends State<Main> {
                       controller: _pageController,
                       physics: NeverScrollableScrollPhysics(),
                       children: [
-                        Home(categorias),
+                        Home(categorias, () => setState(() => {})),
                         AccountPage(),
                         Tiendas(categorias),
                         CartPage(_pageController),
-                        // GoogleMapView()
-                        // Center(
-                        //   child: Container(
-                        //     child: Text('Contacto'),
-                        //   ),
-                        // )
                       ],
                     );
                   default:
@@ -157,8 +152,8 @@ class _MainState extends State<Main> {
               mini: false,
               clipBehavior: Clip.hardEdge,
               onPressed: () => {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Search(categorias)))
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (builder) => Search()))
               },
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

@@ -79,6 +79,7 @@ class _AddAddressState extends State<AddAddress> {
   Widget build(BuildContext context) {
     userModel = context.read<UserModel>();
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(),
         body: Container(
           height: MediaQuery.of(context).size.height,
@@ -104,8 +105,7 @@ class _AddAddressState extends State<AddAddress> {
                 width: 70,
                 child: TextField(
                   controller: _nroCasaController,
-                  decoration:
-                      InputDecoration(labelText: 'N°', helperText: 'opcional'),
+                  decoration: InputDecoration(labelText: 'N°'),
                   keyboardType: TextInputType.number,
                 )),
           ],
@@ -123,8 +123,7 @@ class _AddAddressState extends State<AddAddress> {
             Expanded(
                 child: TextField(
               controller: _calleSecundaria,
-              decoration: InputDecoration(
-                  labelText: 'Calle secundaria', helperText: 'opcional'),
+              decoration: InputDecoration(labelText: 'Calle secundaria'),
             )),
           ],
         ),

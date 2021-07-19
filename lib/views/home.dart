@@ -8,8 +8,9 @@ String imgUrl = globals.imgUrl;
 
 // ignore: must_be_immutable
 class Home extends StatefulWidget {
-  Home(this.categories, {Key? key}) : super(key: key);
+  Home(this.categories, this.reload, {Key? key}) : super(key: key);
   List<Category> categories;
+  var reload;
 
   @override
   _HomeState createState() => _HomeState();
@@ -35,8 +36,18 @@ class _HomeState extends State<Home> {
       categorias.length > 0
           ? Categories(categorias)
           : Center(
-              child: Text('Por favor verifique su conexión a internet'),
-            )
+              child: Column(
+              children: [
+                Text('Por favor verifique su conexión a internet'),
+                TextButton(
+                    onPressed: () => widget.reload(),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      child: Text('Recargar'),
+                    ))
+              ],
+            ))
     ]);
   }
 }

@@ -86,16 +86,49 @@ class _SubcategoriesViewState extends State<SubcategoriesView>
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    Tienda(listabrandsDinamica[index]['id'])))
+                                builder: (context) => Tienda(
+                                    listabrandsDinamica[index]['id'],
+                                    listabrandsDinamica[index])))
                       },
                   child: Card(
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Container(
-                        width: windowSizes.width,
-                        padding: EdgeInsets.all(20),
-                        child: Text(listabrandsDinamica[index]['name'])),
-                  ));
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: Container(
+                          width: windowSizes.width,
+                          padding: EdgeInsets.all(20),
+                          child: Row(
+                            children: [
+                              Hero(
+                                  tag: listabrandsDinamica[index]['id']
+                                          .toString() +
+                                      listabrandsDinamica[index]['image'],
+                                  child: Image.network(
+                                    imgUrl +
+                                        listabrandsDinamica[index]['image'],
+                                    frameBuilder: (BuildContext context,
+                                        Widget child,
+                                        int? frame,
+                                        bool wasSynchronouslyLoaded) {
+                                      if (wasSynchronouslyLoaded) {
+                                        return child;
+                                      }
+                                      return AnimatedOpacity(
+                                        child: child,
+                                        opacity: frame == null ? 0 : 1,
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        curve: Curves.easeOut,
+                                      );
+                                    },
+                                    height: 90,
+                                    width: 90,
+                                    fit: BoxFit.contain,
+                                  )),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(listabrandsDinamica[index]['name']),
+                            ],
+                          ))));
             })
             // Expanded(
             //   child: ListView.builder(

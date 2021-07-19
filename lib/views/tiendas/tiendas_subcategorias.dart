@@ -86,8 +86,9 @@ class _TiendasSubcategoriasState extends State<TiendasSubcategorias> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                Tienda(listaTiendasDinamica[index]))),
+                            builder: (BuildContext context) => Tienda(
+                                listaTiendasDinamica[index]['id'],
+                                listaTiendasDinamica[index]))),
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -96,13 +97,13 @@ class _TiendasSubcategoriasState extends State<TiendasSubcategorias> {
                         semanticContainer: true,
                         child: Row(
                           children: [
-                            // Container(
-                            //     width: 150,
-                            //     padding: EdgeInsets.all(20),
-                            //     child: Center(
-                            //         child: Image.asset(
-                            //             listaTiendasDinamica[index]['img'],
-                            //             fit: BoxFit.cover))),
+                            Container(
+                                width: 150,
+                                padding: EdgeInsets.all(20),
+                                child: Center(
+                                    child: Image.asset(
+                                        listaTiendasDinamica[index]['image'],
+                                        fit: BoxFit.cover))),
                             Expanded(
                                 child: Center(
                                     child: Text(

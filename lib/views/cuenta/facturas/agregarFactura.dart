@@ -43,7 +43,7 @@ class _AgregarFacturaState extends State<AgregarFactura> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.all(20),
-          child: Column(
+          child: ListView(
             children: [facturaForm(context)],
           ),
         ));

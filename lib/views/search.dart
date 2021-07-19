@@ -11,8 +11,7 @@ String url = "http://181.120.66.16:8001/api/flutter/";
 
 // ignore: must_be_immutable
 class Search extends StatefulWidget {
-  Search(this.categorias, {Key? key}) : super(key: key);
-  List categorias;
+  Search({Key? key}) : super(key: key);
   @override
   _SearchState createState() => _SearchState();
 }
@@ -86,6 +85,7 @@ class _SearchState extends State<Search> {
               shrinkWrap: true,
               itemCount: brands.length,
               itemBuilder: (context, index) {
+                print(brands);
                 return GestureDetector(
                   // onTap: () => Navigator.push(
                   //     context,
@@ -97,7 +97,7 @@ class _SearchState extends State<Search> {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              Tienda(brands[index]['id']))),
+                              Tienda(brands[index]['id'], brands[index]))),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     margin: EdgeInsets.symmetric(vertical: 10),

@@ -8,9 +8,10 @@ import 'package:localizate/views/tiendas/producto.dart';
 String imgUrl = globals.imgUrl;
 
 class Tienda extends StatefulWidget {
-  Tienda(this.id, {Key? key}) : super(key: key);
+  Tienda(this.id, this.brand, {Key? key}) : super(key: key);
 
   final int id;
+  final brand;
   // final String img;
   @override
   _TiendaState createState() => _TiendaState();
@@ -29,31 +30,60 @@ class _TiendaState extends State<Tienda> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: FutureBuilder(
-        future: brandDetails(),
-        initialData: "",
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            case ConnectionState.done:
-              var data = snapshot.data;
-              return Column(children: [
-                Text(data['name']),
-                Expanded(
-                    child: ListView(
-                  children: List.generate(data['products'].length, (prodIndex) {
-                    return ProductoTienda(data['products'][prodIndex]);
-                  }),
-                ))
-              ]);
-            default:
-              return Text('done');
-          }
-        },
-      ),
-    );
+        appBar: AppBar(),
+        body: Column(children: [
+          SizedBox(
+            height: 20,
+          ),
+          Hero(
+              tag: widget.brand['id'].toString() + widget.brand['image'],
+              child: Image.network(
+                imgUrl + widget.brand['image'],
+                frameBuilder: (BuildContext context, Widget child, int? frame,
+                    bool wasSynchronouslyLoaded) {
+                  if (wasSynchronouslyLoaded) {
+                    return child;
+                  }
+                  return AnimatedOpacity(
+                    child: child,
+                    opacity: frame == null ? 0 : 1,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                },
+                height: 90,
+                width: 90,
+                fit: BoxFit.contain,
+              )),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Text(
+              widget.brand['name'],
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ),
+          FutureBuilder(
+            future: brandDetails(),
+            initialData: "",
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(child: CircularProgressIndicator());
+                case ConnectionState.done:
+                  var data = snapshot.data;
+                  return Expanded(
+                      child: ListView(
+                    children:
+                        List.generate(data['products'].length, (prodIndex) {
+                      return ProductoTienda(data['products'][prodIndex]);
+                    }),
+                  ));
+                default:
+                  return Text('done');
+              }
+            },
+          ),
+        ]));
   }
 }
 
@@ -83,7 +113,8 @@ class ProductoTienda extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Hero(
-                                tag: _producto['id'],
+                                tag: _producto['id'].toString() +
+                                    _producto['image'],
                                 child: Image.network(
                                   imgUrl + _producto['image'],
                                   frameBuilder: (BuildContext context,

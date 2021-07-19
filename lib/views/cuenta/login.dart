@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/globals.dart' as globals;
 import 'package:localizate/models/UserModel.dart';
+import 'package:localizate/views/cuenta/register.dart';
 import 'package:provider/provider.dart';
 
 String url = "http://181.120.66.16:8001/api/flutter/";
@@ -42,7 +43,13 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
-                  onPressed: () => {}, child: Text('Olvidé mi contraseña')),
+                  onPressed: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPage()))
+                      },
+                  child: Text('Registrarse')),
               TextButton(
                   onPressed: () => {
                         //inicia sesión por el método del provider de user

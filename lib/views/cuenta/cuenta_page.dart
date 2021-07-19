@@ -137,19 +137,47 @@ class _AccountPageState extends State<AccountPage>
   }
 }
 
-class AddressCard extends StatelessWidget {
-  const AddressCard({
-    Key? key,
-    required this.direccion,
-  }) : super(key: key);
+class BuildCheckbox extends StatefulWidget {
+  BuildCheckbox(this.items, {Key? key}) : super(key: key);
+  List items;
+  @override
+  _BuildCheckboxState createState() => _BuildCheckboxState();
+}
 
-  final direccion;
+class _BuildCheckboxState extends State<BuildCheckbox> {
+  late List items;
+
+  @override
+  void initState() {
+    super.initState();
+    items = widget.items;
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      child: null,
+    );
+  }
+}
+
+class AddressCard extends StatelessWidget {
+  // ignore: avoid_init_to_null
+  const AddressCard({Key? key, required this.direccion, this.id = null})
+      : super(key: key);
+
+  final direccion;
+  final id;
+
+  @override
+  Widget build(BuildContext context) {
+    print(id);
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: Card(
+            color: (id != null && id == direccion['id'])
+                ? Colors.greenAccent
+                : null,
             child: Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
