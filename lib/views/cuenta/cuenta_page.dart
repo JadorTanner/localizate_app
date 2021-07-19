@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/models/UserModel.dart';
+import 'package:localizate/utils/widgetsComunes.dart';
 import 'package:localizate/views/cuenta/address/addAddress.dart';
 import 'package:localizate/views/cuenta/facturas/agregarFactura.dart';
 import 'package:localizate/views/cuenta/login.dart';
@@ -16,6 +17,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage>
     with SingleTickerProviderStateMixin {
+  late UserModel userModel;
   bool isLogged = false;
   List<Widget> pages = [Text('Pedidos'), Text('Direcciones'), Text('Facturas')];
   late TabController _tabController;
@@ -26,17 +28,19 @@ class _AccountPageState extends State<AccountPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: pages.length, vsync: this);
+    // userModel.getOrders();
+    // userModel.getAddresses();
+    // userModel.getFacturas();
   }
 
   @override
   Widget build(BuildContext context) {
-    var userModel = context.watch<UserModel>();
+    userModel = context.watch<UserModel>();
     // userModel.logout();
     isLogged = userModel.isLogged;
     direcciones = userModel.addresses;
     orders = userModel.orders;
 
-    userModel.getOrders();
     // userModel.getFacturas();
     facturas = userModel.facturas;
     return isLogged

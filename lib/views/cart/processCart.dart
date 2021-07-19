@@ -16,8 +16,8 @@ import 'package:http/http.dart' as http;
 String apiUrl = "http://181.120.66.16:8001/api/flutter/";
 
 class ProcessCart extends StatefulWidget {
-  ProcessCart({Key? key}) : super(key: key);
-
+  ProcessCart(this.items, {Key? key}) : super(key: key);
+  List items;
   @override
   _ProcessCartState createState() => _ProcessCartState();
 }

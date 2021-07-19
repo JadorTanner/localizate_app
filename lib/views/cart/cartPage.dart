@@ -61,42 +61,6 @@ class _ItemsState extends State<Items> {
     items = cart.items;
     var cartTotal = context.watch<CartProvider>().total;
     var user = context.watch<UserModel>();
-    Future processPedido() async {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      var processUrl = Uri.parse(apiUrl + "process-cart");
-      var token = "Bearer " +
-          sharedPreferences.getString('token').toString().replaceAll('"', '');
-      var body = {
-        "cart": jsonEncode(
-            {"delivery_type": 1, "payment_type": "cash", "products": items})
-      };
-      var response = await http.post(processUrl, body: body, headers: {
-        HttpHeaders.authorizationHeader: token,
-      });
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['success']) {
-          cart.deleteItems();
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content:
-                Text('Su pedido se ha procesado, está en estado pendiente'),
-            duration: Duration(seconds: 2),
-          ));
-          context.read<UserModel>().setOrders();
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Ha ocurrido un error'),
-            duration: Duration(seconds: 2),
-          ));
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Ha ocurrido un error'),
-          duration: Duration(seconds: 2),
-        ));
-      }
-    }
 
     return ListView(children: [
       ...List.generate(
@@ -168,8 +132,10 @@ class _ItemsState extends State<Items> {
       ElevatedButton(
           onPressed: () => {
                 user.isLogged
-                    ? Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProcessCart()))
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProcessCart(items)))
                     : widget._pageController.jumpToPage(1)
               },
           child: Text(user.isLogged

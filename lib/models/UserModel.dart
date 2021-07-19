@@ -168,8 +168,7 @@ class UserModel with ChangeNotifier {
         _addresses.add(jsonAddresses[i]);
       }
 
-      //facturas
-      var jsonFacturas = await getAddresses();
+      var jsonFacturas = await getFacturas();
       _facturas = [];
       for (var i = 0; i < jsonFacturas.length; i++) {
         _facturas.add(jsonFacturas[i]);
@@ -243,6 +242,7 @@ class UserModel with ChangeNotifier {
           'reference': referencia,
           'latitude': latitud,
           'longitude': longitud,
+          'number': numero
         },
         headers: {
           HttpHeaders.authorizationHeader: "Bearer " +
