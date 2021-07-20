@@ -7,7 +7,7 @@ import 'package:localizate/views/tiendas/producto.dart';
 import 'package:provider/provider.dart';
 import 'package:localizate/globals.dart' as globals;
 
-String apiUrl = "http://181.120.66.16:8001/api/flutter/";
+String apiUrl = globals.apiUrl;
 
 class CartPage extends StatefulWidget {
   CartPage(this._pageController, {Key? key}) : super(key: key);

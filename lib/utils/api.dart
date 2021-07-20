@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:localizate/globals.dart' as globals;
 
 class Network {
-  final String _url = "http://181.120.66.16:8001/api/flutter/";
+  final String _url = globals.apiUrl;
   getCategories() async {
     var response = await http.get(Uri.parse(_url + "categories"));
     if (response.statusCode == 200) {

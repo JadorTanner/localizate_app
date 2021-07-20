@@ -19,11 +19,11 @@ class Tienda extends StatefulWidget {
 }
 
 class _TiendaState extends State<Tienda> {
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  List _listItems = [];
   Future brandDetails() async {
-    var response = await http.get(Uri.parse(
-        "http://181.120.66.16:8001/api/flutter/" +
-            "brand/" +
-            widget.id.toString()));
+    var response = await http
+        .get(Uri.parse(globals.apiUrl + "brand/" + widget.id.toString()));
     var jsonResponse = jsonDecode(response.body);
     return jsonResponse;
   }
@@ -72,12 +72,36 @@ class _TiendaState extends State<Tienda> {
                   return Center(child: CircularProgressIndicator());
                 case ConnectionState.done:
                   var data = snapshot.data;
+
+                  //agregar items a la lista animada
+
+                  // fetching data from web api, db...
+                  final fetchedList = data['products'];
+                  var future = Future(() {});
+                  for (var i = 0; i < fetchedList.length; i++) {
+                    future = future.then((_) {
+                      return Future.delayed(Duration(milliseconds: 50), () {
+                        _listItems.add(fetchedList[i]);
+                        _listKey.currentState!
+                            .insertItem(_listItems.length - 1);
+                      });
+                    });
+                  }
                   return Expanded(
-                      child: ListView(
-                    children:
-                        List.generate(data['products'].length, (prodIndex) {
-                      return ProductoTienda(data['products'][prodIndex]);
-                    }),
+                      child: AnimatedList(
+                    padding: EdgeInsets.only(bottom: 20),
+                    initialItemCount: _listItems.length,
+                    key: _listKey,
+                    itemBuilder:
+                        (context, prodIndex, Animation<double> animation) {
+                      return SlideTransition(
+                        position: CurvedAnimation(
+                                curve: Curves.easeOut, parent: animation)
+                            .drive(Tween<Offset>(
+                                begin: Offset(0.1, 0), end: Offset(0, 0))),
+                        child: ProductoTienda(_listItems[prodIndex]),
+                      );
+                    },
                   ));
                 default:
                   return Text('done');
@@ -107,6 +131,7 @@ class ProductoTienda extends StatelessWidget {
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Card(
+                  elevation: globals.cardElevation,
                   child: Container(
                       padding: EdgeInsets.all(20),
                       child: Column(children: [

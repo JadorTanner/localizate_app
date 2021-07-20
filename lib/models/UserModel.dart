@@ -5,8 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:localizate/globals.dart' as globals;
 
-String url = "http://181.120.66.16:8001/api/flutter/";
+String url = globals.apiUrl;
 
 class UserModel with ChangeNotifier {
   //las variables que comienzan con _ son variables locales

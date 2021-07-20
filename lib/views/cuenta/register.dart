@@ -3,7 +3,7 @@ import 'package:localizate/globals.dart' as globals;
 import 'package:localizate/models/UserModel.dart';
 import 'package:provider/provider.dart';
 
-String url = "http://181.120.66.16:8001/api/flutter/";
+String url = globals.apiUrl;
 
 // ignore: must_be_immutable
 class RegisterPage extends StatefulWidget {

@@ -137,7 +137,6 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
     producto = widget.producto;
     isOnCart = widget.isOnCart;
     contador = widget.contador;
-
     getProductData();
   }
 
@@ -150,7 +149,9 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
       extraFields = jsonDecode(response.body)['special_fields'];
       getExtraFields(extraFields);
     }
-    relatedProducts = jsonDecode(response.body)['related'];
+    setState(() {
+      relatedProducts = jsonDecode(response.body)['related'];
+    });
   }
 
   //extra fields
@@ -185,7 +186,7 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
                   ));
             });
             return Card(
-                elevation: 5,
+                elevation: globals.cardElevation,
                 margin: EdgeInsets.symmetric(horizontal: 20),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -225,7 +226,6 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
   Widget build(BuildContext context) {
     return Container(
         height: MediaQuery.of(context).size.height - parteArribaHeight,
-        padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -234,111 +234,113 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
         child: SingleChildScrollView(
             child: Column(children: [
           Container(
+              padding: EdgeInsets.all(20),
               child: Column(
-            children: [
-              Text(
-                producto['name'],
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4!
-                    .copyWith(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20),
-              Text(producto['description']),
-              SizedBox(height: 20),
-              ...extraFields,
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CantidadContador(
-                      (cont) => setState(() => contador = cont), contador),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  Text(
+                    producto['name'],
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4!
+                        .copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(producto['description']),
+                  SizedBox(height: 20),
+                  ...extraFields,
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        numberFormat(int.parse(producto['price'])),
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Text("Total: " +
-                          numberFormat(contador *
-                                  int.parse(
-                                      producto['price'].replaceAll(".", "")))
-                              .toString())
+                      CantidadContador(
+                          (cont) => setState(() => contador = cont), contador),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            numberFormat(int.parse(producto['price'])),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text("Total: " +
+                              numberFormat(contador *
+                                      int.parse(producto['price']
+                                          .replaceAll(".", "")))
+                                  .toString())
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
-              SizedBox(height: 80),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(Icons.add_shopping_cart),
-                  SizedBox(width: 40),
-                  Expanded(
-                    child: isOnCart
-                        ? TextButton(
-                            onPressed: () => {
-                              context
-                                  .read<CartProvider>()
-                                  .removeFromCart(producto),
-                              setState(() => isOnCart = false)
-                            },
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20))),
-                              backgroundColor: MaterialStateProperty.all(
-                                  Color(int.parse("0xffFF830F"))),
-                            ),
-                            child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 20),
-                                child: Text(
-                                  "Remover del carrito",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          )
-                        : TextButton(
-                            onPressed: () => {
-                              if (contador > 0)
-                                {
+                  ),
+                  SizedBox(height: 80),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add_shopping_cart),
+                      SizedBox(width: 40),
+                      Expanded(
+                        child: isOnCart
+                            ? TextButton(
+                                onPressed: () => {
                                   context
                                       .read<CartProvider>()
-                                      .addToCart(producto, contador),
-                                  setState(() => isOnCart = true)
-                                }
-                            },
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20))),
-                              backgroundColor: MaterialStateProperty.all(
-                                  Color(int.parse("0xffFF830F"))),
-                            ),
-                            child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 20),
-                                child: Text(
-                                  "Agregar al carrito",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          ),
-                  )
+                                      .removeFromCart(producto),
+                                  setState(() => isOnCart = false)
+                                },
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20))),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color(int.parse("0xffFF830F"))),
+                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 20),
+                                    child: Text(
+                                      "Remover del carrito",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                              )
+                            : TextButton(
+                                onPressed: () => {
+                                  if (contador > 0)
+                                    {
+                                      context
+                                          .read<CartProvider>()
+                                          .addToCart(producto, contador),
+                                      setState(() => isOnCart = true)
+                                    }
+                                },
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20))),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color(int.parse("0xffFF830F"))),
+                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 20),
+                                    child: Text(
+                                      "Agregar al carrito",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                              ),
+                      )
+                    ],
+                  ),
                 ],
-              ),
-            ],
-          )),
+              )),
           SizedBox(
             height: 40,
           ),
@@ -451,39 +453,43 @@ class RelatedProducts extends StatelessWidget {
                                   products[index]['id'], products[index])))
                     },
                 child: Card(
+                    elevation: globals.cardElevation,
                     child: Center(
                         child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                        child: Image.network(
-                      globals.imgUrl + products[index]['image'],
-                      fit: BoxFit.contain,
-                      frameBuilder: (BuildContext context, Widget child, frame,
-                          bool wasSynchronouslyLoaded) {
-                        if (wasSynchronouslyLoaded) {
-                          return child;
-                        }
-                        return AnimatedOpacity(
-                          child: child,
-                          opacity: frame == null ? 0 : 1,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeOut,
-                        );
-                      },
-                    )),
-                    Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(products[index]['name']),
-                            Text(numberFormat(
-                                int.parse(products[index]['price'])))
-                          ],
-                        ))
-                  ],
-                ))))),
-        options: CarouselOptions(viewportFraction: 0.5, disableCenter: false));
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: Image.network(
+                          globals.imgUrl + products[index]['image'],
+                          fit: BoxFit.contain,
+                          frameBuilder: (BuildContext context, Widget child,
+                              frame, bool wasSynchronouslyLoaded) {
+                            if (wasSynchronouslyLoaded) {
+                              return child;
+                            }
+                            return AnimatedOpacity(
+                              child: child,
+                              opacity: frame == null ? 0 : 1,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            );
+                          },
+                        )),
+                        Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(products[index]['name']),
+                                Text(numberFormat(
+                                    int.parse(products[index]['price'])))
+                              ],
+                            ))
+                      ],
+                    ))))),
+        options: CarouselOptions(
+            viewportFraction: 0.5,
+            enableInfiniteScroll: false,
+            disableCenter: false));
   }
 }

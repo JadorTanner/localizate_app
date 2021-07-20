@@ -4,7 +4,7 @@ import 'package:localizate/models/UserModel.dart';
 import 'package:localizate/views/cuenta/register.dart';
 import 'package:provider/provider.dart';
 
-String url = "http://181.120.66.16:8001/api/flutter/";
+String url = globals.apiUrl;
 
 // ignore: must_be_immutable
 class LoginPage extends StatefulWidget {

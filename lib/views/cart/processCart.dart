@@ -13,8 +13,9 @@ import 'package:localizate/views/tiendas/producto.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:localizate/globals.dart' as globals;
 
-String apiUrl = "http://181.120.66.16:8001/api/flutter/";
+String apiUrl = globals.apiUrl;
 
 class ProcessCart extends StatefulWidget {
   ProcessCart(this.items, {Key? key}) : super(key: key);
@@ -118,7 +119,7 @@ class _ProcessCartState extends State<ProcessCart> {
                                     child: Hero(
                                         tag: items[index]['id'],
                                         child: Image.network(
-                                          "http://jadortanner.cu.ma/localizate/images/" +
+                                          globals.imgUrl +
                                               items[index]['image'],
                                           frameBuilder: (BuildContext context,
                                               Widget child,

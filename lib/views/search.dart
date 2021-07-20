@@ -7,7 +7,7 @@ import 'package:localizate/views/tiendas/tienda-single.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
 
-String url = "http://181.120.66.16:8001/api/flutter/";
+String url = globals.apiUrl;
 
 // ignore: must_be_immutable
 class Search extends StatefulWidget {
@@ -83,58 +83,63 @@ class _SearchState extends State<Search> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
+              padding: EdgeInsets.only(top: 20),
               itemCount: brands.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                    // onTap: () => Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (BuildContext context) => Tienda(
-                    //             listaBrandsDinamica[index],
-                    //             widget._subCategoria['img']))),
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                Tienda(brands[index]['id'], brands[index]))),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              Tienda(brands[index]['id'], brands[index]))),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    margin: EdgeInsets.only(bottom: 10),
                     child: Card(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(20),
-                            child: Row(
-                              children: [
-                                Hero(
-                                    tag: brands[index]['id'].toString() +
-                                        brands[index]['image'],
-                                    child: Image.network(
-                                      imgUrl + brands[index]['image'],
-                                      frameBuilder: (BuildContext context,
-                                          Widget child,
-                                          int? frame,
-                                          bool wasSynchronouslyLoaded) {
-                                        if (wasSynchronouslyLoaded) {
-                                          return child;
-                                        }
-                                        return AnimatedOpacity(
-                                          child: child,
-                                          opacity: frame == null ? 0 : 1,
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          curve: Curves.easeOut,
-                                        );
-                                      },
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.contain,
-                                    )),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(brands[index]['name'] ?? 'name')
-                              ],
-                            ))));
+                      elevation: globals.cardElevation,
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            Hero(
+                                tag: brands[index]['id'].toString() +
+                                    brands[index]['image'],
+                                child: Image.network(
+                                  imgUrl + brands[index]['image'],
+                                  frameBuilder: (BuildContext context,
+                                      Widget child,
+                                      int? frame,
+                                      bool wasSynchronouslyLoaded) {
+                                    if (wasSynchronouslyLoaded) {
+                                      return child;
+                                    }
+                                    return AnimatedOpacity(
+                                      child: child,
+                                      opacity: frame == null ? 0 : 1,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.easeOut,
+                                    );
+                                  },
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.contain,
+                                )),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              brands[index]['name'] ?? 'name',
+                              style: Theme.of(context).textTheme.headline6,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
           ),

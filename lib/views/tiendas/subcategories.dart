@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/views/tiendas/tienda-single.dart';
+import 'package:localizate/globals.dart' as globals;
 
 // ignore: must_be_immutable
 class SubcategoriesView extends StatefulWidget {
@@ -79,97 +80,62 @@ class _SubcategoriesViewState extends State<SubcategoriesView>
           ),
         ),
         body: ListView(
+          padding: EdgeInsets.only(top: 20),
           children: <Widget>[
             ...List.generate(listabrandsDinamica.length, (index) {
               return GestureDetector(
-                  onTap: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Tienda(
-                                    listabrandsDinamica[index]['id'],
-                                    listabrandsDinamica[index])))
-                      },
+                onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Tienda(
+                              listabrandsDinamica[index]['id'],
+                              listabrandsDinamica[index])))
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  margin: EdgeInsets.only(bottom: 10),
                   child: Card(
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Container(
-                          width: windowSizes.width,
-                          padding: EdgeInsets.all(20),
-                          child: Row(
-                            children: [
-                              Hero(
-                                  tag: listabrandsDinamica[index]['id']
-                                          .toString() +
-                                      listabrandsDinamica[index]['image'],
-                                  child: Image.network(
-                                    imgUrl +
-                                        listabrandsDinamica[index]['image'],
-                                    frameBuilder: (BuildContext context,
-                                        Widget child,
-                                        int? frame,
-                                        bool wasSynchronouslyLoaded) {
-                                      if (wasSynchronouslyLoaded) {
-                                        return child;
-                                      }
-                                      return AnimatedOpacity(
-                                        child: child,
-                                        opacity: frame == null ? 0 : 1,
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        curve: Curves.easeOut,
-                                      );
-                                    },
-                                    height: 90,
-                                    width: 90,
-                                    fit: BoxFit.contain,
-                                  )),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(listabrandsDinamica[index]['name']),
-                            ],
-                          ))));
+                    elevation: globals.cardElevation,
+                    child: Container(
+                      width: windowSizes.width,
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Hero(
+                              tag: listabrandsDinamica[index]['id'].toString() +
+                                  listabrandsDinamica[index]['image'],
+                              child: Image.network(
+                                imgUrl + listabrandsDinamica[index]['image'],
+                                frameBuilder: (BuildContext context,
+                                    Widget child,
+                                    int? frame,
+                                    bool wasSynchronouslyLoaded) {
+                                  if (wasSynchronouslyLoaded) {
+                                    return child;
+                                  }
+                                  return AnimatedOpacity(
+                                    child: child,
+                                    opacity: frame == null ? 0 : 1,
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeOut,
+                                  );
+                                },
+                                height: 90,
+                                width: 90,
+                                fit: BoxFit.contain,
+                              )),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(listabrandsDinamica[index]['name']),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
             })
-            // Expanded(
-            //   child: ListView.builder(
-            //     shrinkWrap: true,
-            //     itemCount: listabrandsDinamica.length,
-            //     itemBuilder: (context, index) {
-            //       return GestureDetector(
-            //         onTap: () => Navigator.push(
-            //             context,
-            //             MaterialPageRoute(
-            //                 builder: (BuildContext context) => Tienda(
-            //                     listasubcategoriesDinamica[index]['id']))),
-            //         child: Container(
-            //           padding: EdgeInsets.symmetric(horizontal: 20),
-            //           margin: EdgeInsets.symmetric(vertical: 10),
-            //           height: 150,
-            //           child: Card(
-            //             semanticContainer: true,
-            //             child: Row(
-            //               children: [
-            //                 // Container(
-            //                 //     width: 150,
-            //                 //     padding: EdgeInsets.all(20),
-            //                 //     child: Center(
-            //                 //         child: Image.asset(
-            //                 //             listasubcategoriesDinamica[index]['img'],
-            //                 //             fit: BoxFit.cover))),
-            //                 Expanded(
-            //                     child: Center(
-            //                         child: Text(
-            //                   listasubcategoriesDinamica[index]['name'],
-            //                   style: estilosTexto,
-            //                 )))
-            //               ],
-            //             ),
-            //           ),
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
           ],
         ));
   }

@@ -8,11 +8,12 @@ import 'package:localizate/views/cart/cartPage.dart';
 import 'package:localizate/views/cuenta/cuenta_page.dart';
 import 'package:localizate/views/home.dart';
 import 'package:http/http.dart' as http;
+import 'globals.dart' as globals;
 import 'package:localizate/views/search.dart';
 import 'package:localizate/views/tiendas/tiendas.dart';
 import 'package:provider/provider.dart';
 
-String url = "http://181.120.66.16:8001/api/flutter/";
+String url = globals.apiUrl;
 
 void main() => runApp(MultiProvider(
         providers: [
