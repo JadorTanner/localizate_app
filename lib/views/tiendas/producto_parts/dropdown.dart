@@ -40,7 +40,7 @@ class _DropdownProductState extends State<DropdownProduct> {
             dropdownValue = newValue!;
           });
         },
-        items: widget.values.map((String value) {
+        items: widget.values.map((value) {
           return DropdownMenuItem(
             value: value,
             child: Text(value),

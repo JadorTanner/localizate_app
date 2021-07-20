@@ -121,7 +121,7 @@ class ParteAbajoProducto extends StatefulWidget {
 }
 
 class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
-  var extraFields;
+  List extraFields = [];
   var checkedOptions = [];
   late int contador;
   bool isOnCart = false;
@@ -143,22 +143,20 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
     var response = await http.get(Uri.parse(
         'http://181.120.66.16:8001/api/flutter/producto/' +
             producto['id'].toString()));
-    print(jsonDecode(response.body)['special_fields']);
     if (jsonDecode(response.body)['special_fields'] != null) {
-      setState(() {
-        extraFields = jsonDecode(response.body)['special_fields'];
-      });
-      // getExtraFields(extraFields);
+      extraFields = jsonDecode(response.body)['special_fields'];
+      print(extraFields);
+      print(extraFields[0]);
+      getExtraFields(extraFields);
     }
   }
 
   //extra fields
   List<Widget> getExtraFields(fields) {
-    print(fields[0]);
+    // print(fields[0]);
     return extraFields = List<Widget>.generate(fields.length, (fieldIndex) {
       switch (fields[fieldIndex]['type']) {
         case 'options':
-          print(fields[fieldIndex]['type']);
           if (fields[fieldIndex]['multiple']) {
             var options = List.generate(
                 jsonDecode(fields[fieldIndex]['options']).length, (index) {
@@ -203,10 +201,17 @@ class _ParteAbajoProductoState extends State<ParteAbajoProducto> {
                       ...options
                     ]));
           } else {
+            List<String> options = [];
+            for (var i = 0;
+                i < jsonDecode(fields[fieldIndex]['options']).length;
+                i++) {
+              options
+                  .add(jsonDecode(fields[fieldIndex]['options'])[i].toString());
+            }
+            setState(() {});
             return Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
-              child: DropdownProduct(
-                  fields[fieldIndex]['name'], fields[fieldIndex]['options']),
+              child: DropdownProduct(fields[fieldIndex]['name'], options),
             );
           }
         default:
