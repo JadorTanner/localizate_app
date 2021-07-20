@@ -148,7 +148,7 @@ class FacturaCard extends StatelessWidget {
 
 // build cuadricula de brands
 class BrandsCuadricula extends StatelessWidget {
-  const BrandsCuadricula(this.brands, {this.gridCount = 3});
+  const BrandsCuadricula(this.brands, {this.gridCount = 2});
   final List brands;
   final int gridCount;
   @override
@@ -175,35 +175,43 @@ class BrandsCuadricula extends StatelessWidget {
                       padding: EdgeInsets.all(20),
                       child: Column(
                         children: [
-                          Hero(
-                              tag: brands[index]['id'].toString() +
-                                  brands[index]['image'],
-                              child: Image.network(
-                                imgUrl + brands[index]['image'],
-                                frameBuilder: (BuildContext context,
-                                    Widget child,
-                                    int? frame,
-                                    bool wasSynchronouslyLoaded) {
-                                  if (wasSynchronouslyLoaded) {
-                                    return child;
-                                  }
-                                  return AnimatedOpacity(
-                                    child: child,
-                                    opacity: frame == null ? 0 : 1,
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeOut,
-                                  );
-                                },
-                                height: 90,
-                                width: 90,
-                                fit: BoxFit.contain,
-                              )),
-                          SizedBox(
-                            width: 20,
+                          Expanded(
+                            child: Hero(
+                                tag: brands[index]['id'].toString() +
+                                    brands[index]['image'],
+                                child: Image.network(
+                                  imgUrl + brands[index]['image'],
+                                  frameBuilder: (BuildContext context,
+                                      Widget child,
+                                      int? frame,
+                                      bool wasSynchronouslyLoaded) {
+                                    if (wasSynchronouslyLoaded) {
+                                      return child;
+                                    }
+                                    return AnimatedOpacity(
+                                      child: child,
+                                      opacity: frame == null ? 0 : 1,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.easeOut,
+                                    );
+                                  },
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.contain,
+                                )),
                           ),
-                          Text(
-                            brands[index]['name'] ?? 'name',
-                            style: Theme.of(context).textTheme.headline6,
+                          Padding(
+                            padding: EdgeInsets.only(top: 20),
+                            child: Text(
+                              brands[index]['name'] ?? 'name',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6!
+                                  .copyWith(
+                                    fontSize: 14,
+                                  ),
+                            ),
                           )
                         ],
                       ),

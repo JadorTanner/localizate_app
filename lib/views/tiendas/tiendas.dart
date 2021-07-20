@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localizate/models/CategoryModel.dart';
+import 'package:localizate/utils/widgetsComunes.dart';
 import 'package:localizate/views/tiendas/tienda-single.dart';
 import 'package:localizate/globals.dart' as globals;
 
@@ -40,11 +41,14 @@ class _TiendasState extends State<Tiendas> with TickerProviderStateMixin {
                   child: Text(categories[index].name));
             })),
         Expanded(
-            child: TabBarView(
-                controller: _categoriesTabController,
-                children: List.generate(categories.length, (index) {
-                  return SubcategoryTabView(categories[index].subcategories);
-                })))
+            child: Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: TabBarView(
+                    controller: _categoriesTabController,
+                    children: List.generate(categories.length, (index) {
+                      return SubcategoryTabView(
+                          categories[index].subcategories);
+                    }))))
       ],
     );
   }
@@ -85,7 +89,7 @@ class _SubcategoryTabViewState extends State<SubcategoryTabView>
             isScrollable: true,
             tabs: List.generate(subcategories.length, (index) {
               return Container(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(10),
                   child: Text(subcategories[index]['name']));
             })),
         Expanded(
@@ -94,8 +98,12 @@ class _SubcategoryTabViewState extends State<SubcategoryTabView>
                 children: List.generate(subcategories.length, (index) {
                   List brands = subcategories[index]['brands'];
                   return brands.length > 0
-                      ? ListView(
-                          children: List.generate(brands.length, (brandIndex) {
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: BrandsCuadricula(brands))
+                      /*ListView(
+                          children: 
+                          List.generate(brands.length, (brandIndex) {
                             return GestureDetector(
                                 onTap: () => {
                                       Navigator.push(
@@ -150,7 +158,7 @@ class _SubcategoryTabViewState extends State<SubcategoryTabView>
                                           ],
                                         ))));
                           }),
-                        )
+                        )*/
                       : Center(
                           child: Text('No hemos encontrado marcas'),
                         );

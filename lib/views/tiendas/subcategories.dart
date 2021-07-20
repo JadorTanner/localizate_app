@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localizate/utils/widgetsComunes.dart';
 import 'package:localizate/views/tiendas/tienda-single.dart';
 import 'package:localizate/globals.dart' as globals;
 
@@ -79,7 +80,10 @@ class _SubcategoriesViewState extends State<SubcategoriesView>
                     borderRadius: BorderRadius.all(Radius.circular(25.0)))),
           ),
         ),
-        body: ListView(
+        body: Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: BrandsCuadricula(listabrandsDinamica)
+            /*ListView(
           padding: EdgeInsets.only(top: 20),
           children: <Widget>[
             ...List.generate(listabrandsDinamica.length, (index) {
@@ -137,6 +141,7 @@ class _SubcategoriesViewState extends State<SubcategoriesView>
               );
             })
           ],
-        ));
+        )*/
+            ));
   }
 }

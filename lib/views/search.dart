@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:localizate/utils/debouncer.dart';
+import 'package:localizate/utils/widgetsComunes.dart';
 import 'package:localizate/views/tiendas/tienda-single.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/globals.dart' as globals;
@@ -78,7 +79,8 @@ class _SearchState extends State<Search> {
         ),
       ),
       body: Container(
-          child: Column(
+          padding: EdgeInsets.only(top: 20), child: BrandsCuadricula(brands)
+          /*Column(
         children: <Widget>[
           Expanded(
             child: ListView.builder(
@@ -144,7 +146,8 @@ class _SearchState extends State<Search> {
             ),
           ),
         ],
-      )),
+      )*/
+          ),
     );
   }
 }
