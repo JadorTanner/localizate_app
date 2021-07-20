@@ -22,7 +22,9 @@ class AddressCard extends StatelessWidget {
                 child: Column(children: [
                   Text('Nombre: ' + direccion['name']),
                   Text('Calle Principal: ' + direccion['street1']),
-                  Text('Calle Secundaria: ' + direccion['street2']),
+                  Text('Calle Secundaria: ' + direccion['street2'] != null
+                      ? direccion['street2']
+                      : ''),
                   Text(direccion['number'] != null
                       ? 'Nro: ' + direccion['number'].toString()
                       : ''),
@@ -119,6 +121,7 @@ class OrderCard extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class FacturaCard extends StatelessWidget {
   FacturaCard(this.factura, {Key? key}) : super(key: key);
   var factura;

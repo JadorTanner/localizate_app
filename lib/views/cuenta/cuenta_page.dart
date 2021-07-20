@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:localizate/models/UserModel.dart';
-import 'package:localizate/utils/widgetsComunes.dart';
 import 'package:localizate/views/cuenta/address/addAddress.dart';
 import 'package:localizate/views/cuenta/facturas/agregarFactura.dart';
 import 'package:localizate/views/cuenta/login.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:pusher_websocket_flutter/pusher.dart';
 
 var formatter = NumberFormat('#,##0', 'es_ES');
 
@@ -18,12 +21,14 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage>
     with SingleTickerProviderStateMixin {
   late UserModel userModel;
+  late Channel channel;
   bool isLogged = false;
   List<Widget> pages = [Text('Pedidos'), Text('Direcciones'), Text('Facturas')];
   late TabController _tabController;
   List direcciones = [];
   List facturas = [];
   List orders = [];
+  // var textoEvento = "texto_evento";
   @override
   void initState() {
     super.initState();
@@ -31,7 +36,29 @@ class _AccountPageState extends State<AccountPage>
     // userModel.getOrders();
     // userModel.getAddresses();
     // userModel.getFacturas();
+    // initPusher();
   }
+
+  // Future<void> initPusher() async {
+  //   try {
+  //     await Pusher.init("4a54c4ccefa7c6413910", PusherOptions(cluster: "us2"));
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //   }
+
+  //   Pusher.connect();
+
+  //   channel = await Pusher.subscribe('admin');
+  //   channel.bind('update-order', (event) {
+  //     print(event.data);
+  //     var data = jsonDecode(event.data);
+  //     print(data);
+  //     print(data['texto']);
+  //     setState(() {
+  //       textoEvento = data['texto'];
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +121,7 @@ class _AccountPageState extends State<AccountPage>
                 // ),
                 ListView(
                   children: [
+                    // Text(textoEvento),
                     TextButton.icon(
                         onPressed: () => {
                               Navigator.push(

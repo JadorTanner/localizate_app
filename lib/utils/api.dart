@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:localizate/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 

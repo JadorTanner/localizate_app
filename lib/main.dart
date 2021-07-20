@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:localizate/globals.dart';
+import 'package:flutter/services.dart';
 import 'package:localizate/models/CategoryModel.dart';
 import 'package:localizate/models/UserModel.dart';
 import 'package:localizate/models/productModel.dart';
 import 'package:localizate/views/cart/cartPage.dart';
 import 'package:localizate/views/cuenta/cuenta_page.dart';
-import 'package:localizate/views/cuenta/address/googleMaps.dart';
 import 'package:localizate/views/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizate/views/search.dart';
@@ -45,7 +43,6 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   List<ProductModel> productos = [];
-
   @override
   void initState() {
     super.initState();

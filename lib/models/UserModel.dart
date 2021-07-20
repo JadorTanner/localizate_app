@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:localizate/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 
 String url = "http://181.120.66.16:8001/api/flutter/";
