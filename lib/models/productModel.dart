@@ -44,10 +44,10 @@ class CartProvider with ChangeNotifier {
     var product = item;
     int parsedPrice = int.parse(product['price'].replaceAll(".", ""));
     int totalPoduct = parsedPrice * cantidad;
-    this._total += this.total + totalPoduct;
+    _total += totalPoduct;
     product['cantidad'] = cantidad.toString();
     product['productTotal'] = totalPoduct.toString();
-    this._items.add(product);
+    _items.add(product);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('cartItems', jsonEncode(_items));
     sharedPreferences.setInt('cartTotal', _total);
@@ -64,16 +64,13 @@ class CartProvider with ChangeNotifier {
 
   getCartData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
+    var storedItems = sharedPreferences.getString('cartItems');
+    var storedTotal = sharedPreferences.getInt('cartTotal');
     //obtiene los productos guardados en el dispositivo
-    this._items = sharedPreferences.getString('cartItems') != null
-        ? jsonDecode(sharedPreferences.getString('cartItems').toString())
-        : [];
+    _items = storedItems != null ? jsonDecode(storedItems.toString()) : [];
 
     //obtiene el total del carrito guardado en el dispositivo
-    this._total = sharedPreferences.getString('cartTotal') != null
-        ? int.parse(sharedPreferences.getInt('cartTotal').toString())
-        : 0;
+    _total = storedTotal != null ? storedTotal : 0;
   }
 
   // optiene la posicion de un elemento en el carrito por su id
@@ -91,7 +88,7 @@ class CartProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     sharedPreferences.setString('cartItems', jsonEncode(_items));
-    sharedPreferences.setString('cartTotal', _total.toString());
+    sharedPreferences.setInt('cartTotal', _total);
 
     notifyListeners();
   }

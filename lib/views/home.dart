@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:localizate/models/CategoryModel.dart';
+import 'package:localizate/utils/format.dart';
+import 'package:localizate/views/cart/cartPage.dart';
 import 'package:localizate/views/tiendas/subcategories.dart';
 import 'package:localizate/globals.dart' as globals;
 

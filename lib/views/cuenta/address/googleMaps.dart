@@ -19,7 +19,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   Widget build(BuildContext context) {
     userModel = context.watch<UserModel>();
     direcciones = userModel.addresses;
-    print(direcciones);
     return RefreshIndicator(
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

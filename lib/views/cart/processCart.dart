@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:localizate/models/UserModel.dart';
 import 'package:localizate/models/productModel.dart';
+import 'package:localizate/utils/widgetsComunes.dart';
 import 'package:localizate/views/cuenta/address/addAddress.dart';
 import 'package:localizate/views/cuenta/cuenta_page.dart';
 import 'package:localizate/views/cuenta/facturas/agregarFactura.dart';
-import 'package:localizate/views/tiendas/producto/producto.dart';
+import 'package:localizate/views/tiendas/producto.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -185,7 +186,6 @@ class _SelectAddressState extends State<SelectAddress> {
                     setState(
                         () => selectedDirection = user.addresses[index]['id']),
                     widget.setDireccion(user.addresses[index]['id']),
-                    print(selectedDirection)
                   },
                   child: AddressCard(
                       direccion: user.addresses[index], id: selectedDirection),
@@ -229,28 +229,6 @@ class _SelectFacturaState extends State<SelectFactura> {
             icon: Icon(Icons.person),
             label: Text('Agregar factura'))
       ],
-    );
-  }
-}
-
-class FacturaCard extends StatelessWidget {
-  // ignore: avoid_init_to_null
-  FacturaCard(this.factura, {Key? key, this.id = null}) : super(key: key);
-  var factura;
-  final id;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Card(
-        color: (id != null && id == factura['id']) ? Colors.greenAccent : null,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          child: Center(
-            child: Text(factura['ruc'] ?? 'Factura'),
-          ),
-        ),
-      ),
     );
   }
 }

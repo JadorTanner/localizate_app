@@ -11,16 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:localizate/views/search.dart';
 import 'package:localizate/views/tiendas/tiendas.dart';
 import 'package:provider/provider.dart';
-// import 'package:location_permissions/location_permissions.dart';
 
 String url = "http://181.120.66.16:8001/api/flutter/";
-
-// Future askPermissions() async {
-//   print('pidiendo permisos');
-//   PermissionStatus permission =
-//       await LocationPermissions().requestPermissions();
-//   print(permission);
-// }
 
 void main() => runApp(MultiProvider(
         providers: [

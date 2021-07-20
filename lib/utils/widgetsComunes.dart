@@ -1,34 +1,28 @@
 import 'package:flutter/material.dart';
 
 class AddressCard extends StatelessWidget {
-  const AddressCard({
-    Key? key,
-    required this.direccion,
-  }) : super(key: key);
+  // ignore: avoid_init_to_null
+  const AddressCard({Key? key, required this.direccion, this.id = null})
+      : super(key: key);
 
   final direccion;
+  final id;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: Card(
-            // color: direccion['is_default'] == true
-            //     ? Theme.of(context).primaryColor
-            //     : Colors.white,
+            color: (id != null && id == direccion['id'])
+                ? Colors.greenAccent
+                : null,
             child: Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Column(children: [
                   Text('Nombre: ' + direccion['name']),
                   Text('Calle Principal: ' + direccion['street1']),
-                  Text('Calle Secundaria: ' + direccion['street2'] != null
-                      ? direccion['street2']
-                      : ''),
-                  Text(direccion['number'] != null
-                      ? 'Nro: ' + direccion['number'].toString()
-                      : ''),
-                  Text('Referencia: ' + direccion['reference']),
+                  Text('Calle Secundaria: ' + direccion['street2']),
                 ]))));
   }
 }
@@ -123,32 +117,24 @@ class OrderCard extends StatelessWidget {
 
 // ignore: must_be_immutable
 class FacturaCard extends StatelessWidget {
-  FacturaCard(this.factura, {Key? key}) : super(key: key);
+  // ignore: avoid_init_to_null
+  FacturaCard(this.factura, {Key? key, this.id = null}) : super(key: key);
   var factura;
+  final id;
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Card(
+        color: (id != null && id == factura['id']) ? Colors.greenAccent : null,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Razon: ' + factura['razon']),
-                    Text('Ruc: ' + factura['ruc']),
-                  ],
-                ),
-                Text('Email: ' + factura['email']),
-                Text('Telefono: ' + factura['telefono']),
-                Text(factura['direccion'])
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Razon: ${factura['razon'] ?? 'Razon'}"),
+              Text("RUC: ${factura['ruc'] ?? 'Factura'}")
+            ],
           ),
         ),
       ),

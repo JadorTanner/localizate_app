@@ -45,7 +45,6 @@ class _AccountState extends State<Account> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     Map _user = {};
     _user['user'] = sharedPreferences.getString('user');
-    print(_user['user']);
     _userData = jsonDecode(_user['user'].toString());
     // _user['pedidos'] = await getOrders();
     // return _user;
@@ -72,7 +71,6 @@ class _AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
-    print(_userData);
     return Padding(
         padding: EdgeInsets.all(20),
         child: Column(children: [

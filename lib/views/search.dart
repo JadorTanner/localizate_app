@@ -85,45 +85,56 @@ class _SearchState extends State<Search> {
               shrinkWrap: true,
               itemCount: brands.length,
               itemBuilder: (context, index) {
-                print(brands);
                 return GestureDetector(
-                  // onTap: () => Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (BuildContext context) => Tienda(
-                  //             listaBrandsDinamica[index],
-                  //             widget._subCategoria['img']))),
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              Tienda(brands[index]['id'], brands[index]))),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    height: 150,
+                    // onTap: () => Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (BuildContext context) => Tienda(
+                    //             listaBrandsDinamica[index],
+                    //             widget._subCategoria['img']))),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                Tienda(brands[index]['id'], brands[index]))),
                     child: Card(
-                      semanticContainer: true,
-                      child: Row(
-                        children: [
-                          // Container(
-                          //     width: 150,
-                          //     padding: EdgeInsets.all(20),
-                          //     child: Center(
-                          //         child: Image.asset(
-                          //             brands[index]['img'],
-                          //             fit: BoxFit.cover))),
-                          Expanded(
-                              child: Center(
-                                  child: Text(
-                            brands[index]['name'],
-                            style: estilosTextoCategorias,
-                          )))
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(20),
+                            child: Row(
+                              children: [
+                                Hero(
+                                    tag: brands[index]['id'].toString() +
+                                        brands[index]['image'],
+                                    child: Image.network(
+                                      imgUrl + brands[index]['image'],
+                                      frameBuilder: (BuildContext context,
+                                          Widget child,
+                                          int? frame,
+                                          bool wasSynchronouslyLoaded) {
+                                        if (wasSynchronouslyLoaded) {
+                                          return child;
+                                        }
+                                        return AnimatedOpacity(
+                                          child: child,
+                                          opacity: frame == null ? 0 : 1,
+                                          duration:
+                                              const Duration(milliseconds: 300),
+                                          curve: Curves.easeOut,
+                                        );
+                                      },
+                                      height: 90,
+                                      width: 90,
+                                      fit: BoxFit.contain,
+                                    )),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(brands[index]['name'] ?? 'name')
+                              ],
+                            ))));
               },
             ),
           ),
