@@ -105,64 +105,72 @@ class _AccountPageState extends State<AccountPage>
               ),
               Expanded(
                   child: TabBarView(controller: _tabController, children: [
-                ListView(
-                  children: List.generate(
-                      orders.length,
-                      (index) => OrderCard(
-                          orders[index]['id'].toString(),
-                          orders[index]['invoice_number'].toString(),
-                          orders[index]['created_at'].toString(),
-                          orders[index]['status'],
-                          // orders[index]['total'],
-                          orders[index]['delivery_type'],
-                          orders[index]['payment_type'])),
-                ),
+                RefreshIndicator(
+                    child: ListView(
+                      children: List.generate(
+                          orders.length,
+                          (index) => OrderCard(
+                              orders[index]['id'].toString(),
+                              orders[index]['invoice_number'].toString(),
+                              orders[index]['created_at'].toString(),
+                              orders[index]['status'],
+                              // orders[index]['total'],
+                              orders[index]['delivery_type'],
+                              orders[index]['payment_type'])),
+                    ),
+                    onRefresh: () => userModel.setOrders()),
                 // ListView(
                 //   children: [Center(child: Text('Ordenes'))],
                 // ),
-                ListView(
-                  children: [
-                    // Text(textoEvento),
-                    TextButton.icon(
-                        onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AddAddress()))
-                            },
-                        icon: Icon(Icons.map_outlined),
-                        label: Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                          child: Text('Agregar Dirección'),
-                        )),
-                    ...List.generate(direcciones.length,
-                        (index) => AddressCard(direccion: direcciones[index])),
-                  ],
-                ),
-                ListView(children: [
-                  TextButton.icon(
-                      onPressed: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AgregarFactura()))
-                          },
-                      icon: Icon(Icons.map_outlined),
-                      label: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                        child: Text('Agregar Factura'),
-                      )),
-                  GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: 3,
-                    children: [
-                      ...List.generate(facturas.length,
-                          (index) => FacturaCard(facturas[index])),
-                    ],
-                  )
-                ])
+                RefreshIndicator(
+                    child: ListView(
+                      children: [
+                        // Text(textoEvento),
+                        TextButton.icon(
+                            onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AddAddress()))
+                                },
+                            icon: Icon(Icons.map_outlined),
+                            label: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 15),
+                              child: Text('Agregar Dirección'),
+                            )),
+                        ...List.generate(
+                            direcciones.length,
+                            (index) =>
+                                AddressCard(direccion: direcciones[index])),
+                      ],
+                    ),
+                    onRefresh: () => userModel.setAddresses()),
+                RefreshIndicator(
+                    child: ListView(children: [
+                      TextButton.icon(
+                          onPressed: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AgregarFactura()))
+                              },
+                          icon: Icon(Icons.map_outlined),
+                          label: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 15),
+                            child: Text('Agregar Factura'),
+                          )),
+                      GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        children: [
+                          ...List.generate(facturas.length,
+                              (index) => FacturaCard(facturas[index])),
+                        ],
+                      )
+                    ]),
+                    onRefresh: () => userModel.setFacturas())
               ]))
             ],
           )

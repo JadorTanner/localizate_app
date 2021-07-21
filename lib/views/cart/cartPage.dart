@@ -55,7 +55,6 @@ class _ItemsState extends State<Items> {
     items = cart.items;
     var cartTotal = context.watch<CartProvider>().total;
     var user = context.watch<UserModel>();
-
     return ListView(padding: EdgeInsets.all(20), children: [
       ...List.generate(
           items.length,
@@ -98,12 +97,16 @@ class _ItemsState extends State<Items> {
                                       height: 50,
                                     )),
                               ),
-                              Column(
-                                children: [
-                                  Text(items[index]['name']),
-                                  Text(
-                                      'Pu.: ${numberFormat(int.parse(items[index]['price']))}'),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      child: Text(items[index]['name']),
+                                    ),
+                                    Text(
+                                        'Unidad.: ${numberFormat(int.parse(items[index]['price']))}'),
+                                  ],
+                                ),
                               ),
                               Column(
                                 children: [

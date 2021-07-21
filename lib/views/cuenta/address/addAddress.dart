@@ -136,8 +136,7 @@ class _AddAddressState extends State<AddAddress> {
             onPressed: () {
               if (_nameController.text != "" &&
                   _callePrincipal.text != "" &&
-                  _referencia.text != "" &&
-                  _nroCasaController.text != "") {
+                  _referencia.text != "") {
                 agregarDireccion();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(

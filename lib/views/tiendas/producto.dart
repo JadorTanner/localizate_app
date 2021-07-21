@@ -57,58 +57,62 @@ class ProductoDetails extends StatelessWidget {
           focusElevation: 0,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-        body: ListView(children: [
-          Container(
-              width: MediaQuery.of(context).size.width,
-              height: parteArribaHeight,
-              child: CarouselSlider(
-                  options: CarouselOptions(
-                      viewportFraction: 0.6,
-                      enlargeCenterPage: true,
-                      enableInfiniteScroll: false),
-                  items: [
-                    Hero(
-                        tag: localProduct['id'].toString() +
-                            localProduct['image'],
-                        child: Image.network(
-                          globals.imgUrl + localProduct['image'],
-                          fit: BoxFit.contain,
-                          frameBuilder: (BuildContext context, Widget child,
-                              frame, bool wasSynchronouslyLoaded) {
-                            if (wasSynchronouslyLoaded) {
-                              return child;
-                            }
-                            return AnimatedOpacity(
-                              child: child,
-                              opacity: frame == null ? 0 : 1,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeOut,
-                            );
-                          },
-                        )),
-                    ...List.generate(
-                      images.length,
-                      (index) {
-                        return Image.network(
-                          globals.imgUrl + images[index],
-                          frameBuilder: (BuildContext context, Widget child,
-                              frame, bool wasSynchronouslyLoaded) {
-                            if (wasSynchronouslyLoaded) {
-                              return child;
-                            }
-                            return AnimatedOpacity(
-                              child: child,
-                              opacity: frame == null ? 0 : 1,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeOut,
-                            );
-                          },
-                        );
-                      },
-                    )
-                  ])),
-          ParteAbajoProducto(localProduct, contador, isOnCart)
-        ]));
+        body: SafeArea(
+          top: false,
+          bottom: true,
+          child: ListView(children: [
+            Container(
+                width: MediaQuery.of(context).size.width,
+                height: parteArribaHeight,
+                child: CarouselSlider(
+                    options: CarouselOptions(
+                        viewportFraction: 0.6,
+                        enlargeCenterPage: true,
+                        enableInfiniteScroll: false),
+                    items: [
+                      Hero(
+                          tag: localProduct['id'].toString() +
+                              localProduct['image'],
+                          child: Image.network(
+                            globals.imgUrl + localProduct['image'],
+                            fit: BoxFit.contain,
+                            frameBuilder: (BuildContext context, Widget child,
+                                frame, bool wasSynchronouslyLoaded) {
+                              if (wasSynchronouslyLoaded) {
+                                return child;
+                              }
+                              return AnimatedOpacity(
+                                child: child,
+                                opacity: frame == null ? 0 : 1,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOut,
+                              );
+                            },
+                          )),
+                      ...List.generate(
+                        images.length,
+                        (index) {
+                          return Image.network(
+                            globals.imgUrl + images[index],
+                            frameBuilder: (BuildContext context, Widget child,
+                                frame, bool wasSynchronouslyLoaded) {
+                              if (wasSynchronouslyLoaded) {
+                                return child;
+                              }
+                              return AnimatedOpacity(
+                                child: child,
+                                opacity: frame == null ? 0 : 1,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOut,
+                              );
+                            },
+                          );
+                        },
+                      )
+                    ])),
+            ParteAbajoProducto(localProduct, contador, isOnCart)
+          ]),
+        ));
   }
 }
 
